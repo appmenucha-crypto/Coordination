@@ -92,7 +92,7 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 LOGIN_URL = '/connexion/'
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/connexion/'
-ALLOWED_HOSTS = ['31.97.68.2', 'localhost', '127.0.0.1']
+
 
 CSRF_TRUSTED_ORIGINS = [
     'http://31.97.68.2:3000',  # IP + port que tu utilises
