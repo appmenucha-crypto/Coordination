@@ -20,12 +20,7 @@ ALLOWED_HOSTS = ['*']
 # ------------------------------------------------------------
 
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL'),
-        conn_max_age=600
-    )
-}
+DATABASES = { 'default': { 'ENGINE': 'django.db.backends.postgresql', 'NAME': 'departements', 'USER': 'esther', 'PASSWORD': '123456', 'HOST': 'coodination-des-dpartements-departements-a4fmbm', # le host exact fourni 'PORT': '5432', } }
 
 # ------------------------------------------------------------
 # Applications et middleware
