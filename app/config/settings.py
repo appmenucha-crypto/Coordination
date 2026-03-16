@@ -1,24 +1,18 @@
+# config/settings.py
 from pathlib import Path
 import os
-from dotenv import load_dotenv
 
 # ------------------------------------------------------------
-# Définir la racine du projet et charger le .env
+# Racine du projet
 # ------------------------------------------------------------
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-# Charger explicitement le .env depuis la racine du projet
-dotenv_path = BASE_DIR / '.env'
-load_dotenv(dotenv_path)
 
 # ------------------------------------------------------------
 # Sécurité et debug
 # ------------------------------------------------------------
-SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-default-key')
-DEBUG = os.getenv('DEBUG', 'True') == 'True'
-ALLOWED_HOSTS = ['*']
-
-listen_addresses = '*'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-default-key')
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
 
 # ------------------------------------------------------------
 # Applications et middleware
@@ -63,16 +57,16 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # ------------------------------------------------------------
-# Base de données
+# Base de données PostgreSQL via variables d'environnement
 # ------------------------------------------------------------
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME', 'departements'),
-        'USER': os.getenv('DB_USER', 'esther'),
-        'PASSWORD': os.getenv('DB_PASSWORD', '123456'),
-        'HOST': os.getenv('DB_HOST', 'pg_departements'),  # IMPORTANT : pas localhost
-        'PORT': os.getenv('DB_PORT', '5432'),
+        'NAME': os.environ.get('DB_NAME', 'departements'),
+        'USER': os.environ.get('DB_USER', 'esther'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', '123456'),
+        'HOST': os.environ.get('DB_HOST', 'pg_departements'),
+        'PORT': os.environ.get('DB_PORT', '5432'),
     }
 }
 
