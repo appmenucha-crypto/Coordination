@@ -24,7 +24,7 @@ DATABASES = {
         'NAME': 'departements',
         'USER': 'esther',
         'PASSWORD': '123456',
-        'HOST': 'db-abc123.postgres.dokploy.com',  # le host exact fourni
+        'HOST': 'coodination-des-dpartements-departements-a4fmbm',  # le host exact fourni
         'PORT': '5432',
     }
 }
