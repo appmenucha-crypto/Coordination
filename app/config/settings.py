@@ -95,8 +95,8 @@ LOGOUT_REDIRECT_URL = '/connexion/'
 
 # URLs publiques de confiance pour CSRF
 CSRF_TRUSTED_ORIGINS = [
-    'https://<ton-deploiement>.dokploy.io',
-    'http://<ton-deploiement>.dokploy.io',
+    'https://coor-dept.dokploy.io',
+    'http://coor-dept.dokploy.io',
 ]
 
 # Exemple avec ton port si nécessaire
