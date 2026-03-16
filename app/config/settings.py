@@ -1,7 +1,6 @@
 # settings.py
 import os
 from pathlib import Path
-import dj_database_url
 
 # ------------------------------------------------------------
 # Racine du projet
@@ -16,14 +15,17 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = ['*']  # Pour éviter les erreurs Bad Request en déploiement
 
 # ------------------------------------------------------------
-# Base de données via DATABASE_URL
+# Base de données avec host et identifiants fournis
 # ------------------------------------------------------------
-# Utilisation de dj_database_url pour parser DATABASE_URL depuis Dokploy
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL'),  # Dokploy doit fournir la variable
-        conn_max_age=600  # Recommandé pour la prod
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'departements',
+        'USER': 'esther',
+        'PASSWORD': '123456',
+        'HOST': 'coodination-des-dpartements-departements-a4fmbm',  # ton host fourni
+        'PORT': '5432',
+    }
 }
 
 # ------------------------------------------------------------
@@ -41,7 +43,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # Pour servir les statics en prod
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -73,7 +75,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Static et media
 # ------------------------------------------------------------
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']  # Créer ce dossier pour éviter le warning W004
+STATICFILES_DIRS = [BASE_DIR / 'static']  # Crée ce dossier pour éviter le warning W004
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 MEDIA_URL = '/media/'
