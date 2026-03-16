@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "🔍 DATABASE_URL = $DATABASE_URL"
+echo "🔍 DATABASE_URL = postgresql://esther:123456@coodination-des-dpartements-departements-a4fmbm:5432/departements"
 
 echo "🔄 Running migrations..."
 python manage.py migrate --noinput
