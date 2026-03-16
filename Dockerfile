@@ -19,10 +19,10 @@ COPY app/ .
 ENV PATH=/root/.local/bin:$PATH
 ENV PYTHONPATH=/app
 
-EXPOSE 8000   # tu peux mettre 8000 comme port par défaut
+EXPOSE $PORT
 
 COPY app/entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
 
 ENTRYPOINT ["/app/entrypoint.sh"]
-CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000"]
+CMD []
