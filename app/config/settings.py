@@ -95,7 +95,7 @@ LOGOUT_REDIRECT_URL = '/connexion/'
 
 
 CSRF_TRUSTED_ORIGINS = [
-    'http://31.97.68.2:8000',  # IP + port que tu utilises
+    'https://31.97.68.2:8000',  # IP + port que tu utilises
 ]
 
 # Exemple avec ton port si nécessaire
