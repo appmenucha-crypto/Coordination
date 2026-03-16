@@ -14,7 +14,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ------------------------------------------------------------
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-default-key')
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
-ALLOWED_HOSTS = ['*']  # Pour éviter les erreurs Bad Request en déploiement
+
 
 # ------------------------------------------------------------
 # Base de données avec host et identifiants fournis
@@ -94,9 +94,12 @@ LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/connexion/'
 
 
-CSRF_TRUSTED_ORIGINS = [
-    'https://31.97.68.2:8000',  # IP + port que tu utilises
+ALLOWED_HOSTS = [
+    'coord-dept.appliriki.com',
+    'localhost',
+    '127.0.0.1',
 ]
 
-# Exemple avec ton port si nécessaire
-# 'https://<ton-deploiement>.dokploy.io:8000',
+CSRF_TRUSTED_ORIGINS = [
+    'https://coord-dept.appliriki.com',
+]
