@@ -19,11 +19,14 @@ ALLOWED_HOSTS = ['*']
 # Base de données via DATABASE_URL
 # ------------------------------------------------------------
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL'),
-        conn_max_age=600,
-        ssl_require=True  # si ton serveur PostgreSQL le demande
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'departements',
+        'USER': 'esther',
+        'PASSWORD': '123456',
+        'HOST': 'db-abc123.postgres.dokploy.com',  # le host exact fourni
+        'PORT': '5432',
+    }
 }
 
 # ------------------------------------------------------------
