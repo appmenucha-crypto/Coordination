@@ -16,7 +16,7 @@ load_dotenv(dotenv_path)
 # ------------------------------------------------------------
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-default-key')
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
+ALLOWED_HOSTS = ['*']
 
 listen_addresses = '*'
 
