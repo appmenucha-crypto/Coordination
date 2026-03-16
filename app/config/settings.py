@@ -1,6 +1,7 @@
-# config/settings.py
-from pathlib import Path
+# settings.py
 import os
+from pathlib import Path
+import dj_database_url
 
 # ------------------------------------------------------------
 # Racine du projet
@@ -10,9 +11,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ------------------------------------------------------------
 # Sécurité et debug
 # ------------------------------------------------------------
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-default-key')
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-default-key')
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
+ALLOWED_HOSTS = ['*']
+
+# ------------------------------------------------------------
+# Base de données via DATABASE_URL
+# ------------------------------------------------------------
+DATABASES = {
+    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
+}
 
 # ------------------------------------------------------------
 # Applications et middleware
@@ -57,46 +65,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # ------------------------------------------------------------
-# Base de données PostgreSQL via variables d'environnement
-# ------------------------------------------------------------
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME', 'departements'),
-        'USER': os.environ.get('DB_USER', 'esther'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', '123456'),
-        'HOST': os.environ.get('DB_HOST', 'db'),
-        'PORT': os.environ.get('DB_PORT', '5432'),
-    }
-}
-
-# ------------------------------------------------------------
-# Validation des mots de passe
-# ------------------------------------------------------------
-AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
-]
-
-# ------------------------------------------------------------
-# Internationalisation
-# ------------------------------------------------------------
-LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
-USE_I18N = True
-USE_TZ = True
-
-# ------------------------------------------------------------
-# Authentification
-# ------------------------------------------------------------
-LOGIN_URL = '/connexion/'
-LOGIN_REDIRECT_URL = '/dashboard/'
-LOGOUT_REDIRECT_URL = '/connexion/'
-
-# ------------------------------------------------------------
-# Fichiers statiques et médias
+# Static et media
 # ------------------------------------------------------------
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
@@ -104,3 +73,10 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# ------------------------------------------------------------
+# Authentification
+# ------------------------------------------------------------
+LOGIN_URL = '/connexion/'
+LOGIN_REDIRECT_URL = '/dashboard/'
+LOGOUT_REDIRECT_URL = '/connexion/'
