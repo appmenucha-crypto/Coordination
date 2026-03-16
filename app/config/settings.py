@@ -20,10 +20,14 @@ ALLOWED_HOSTS = ['*']  # Pour éviter les erreurs Bad Request en déploiement
 # Base de données avec host et identifiants fournis
 # ------------------------------------------------------------
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL'),  # Dokploy injecte la DB URL
-        conn_max_age=600
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'departements',
+        'USER': 'esther',
+        'PASSWORD': '123456',
+        'HOST': 'coodination-des-dpartements-departements-a4fmbm',  # Internal host
+        'PORT': '5432',  # Internal port
+    }
 }
 
 # ------------------------------------------------------------
