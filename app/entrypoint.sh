@@ -2,29 +2,37 @@
 set -e
 
 # ------------------------------------------------------------
-# Affichage DATABASE_URL
+# Affichage de la configuration de la base
 # ------------------------------------------------------------
-echo "🔍 DATABASE_URL = $DATABASE_URL"
+echo "🔍 Connecting to database:"
+echo "   NAME: departements"
+echo "   USER: esther"
+echo "   HOST: coodination-des-dpartements-departements-a4fmbm"
+echo "   PORT: 5432"
 
 # ------------------------------------------------------------
-# Appliquer les migrations
+# Appliquer les migrations Django
 # ------------------------------------------------------------
 echo "🔄 Running migrations..."
 python manage.py migrate --noinput
 
 # ------------------------------------------------------------
-# Créer l’utilisateur superadmin si inexistant
+# Créer le superuser si inexistant
 # ------------------------------------------------------------
 echo "👤 Creating superuser if not exists..."
 python manage.py shell << END
 from django.contrib.auth import get_user_model
 User = get_user_model()
-if not User.objects.filter(username="admin").exists():
-    User.objects.create_superuser(
-        username="admin",
-        email="admin@example.com",
-        password="admin123"
-    )
+
+username = "admin"
+email = "admin@example.com"
+password = "admin123"
+
+if not User.objects.filter(username=username).exists():
+    User.objects.create_superuser(username=username, email=email, password=password)
+    print("✅ Superuser created:", username)
+else:
+    print("ℹ️ Superuser already exists:", username)
 END
 
 # ------------------------------------------------------------
