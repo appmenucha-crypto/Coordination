@@ -92,3 +92,12 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 LOGIN_URL = '/connexion/'
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/connexion/'
+
+# URLs publiques de confiance pour CSRF
+CSRF_TRUSTED_ORIGINS = [
+    'https://<ton-deploiement>.dokploy.io',
+    'http://<ton-deploiement>.dokploy.io',
+]
+
+# Exemple avec ton port si nécessaire
+# 'https://<ton-deploiement>.dokploy.io:8000',
