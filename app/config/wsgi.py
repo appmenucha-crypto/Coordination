@@ -14,3 +14,9 @@ from django.core.wsgi import get_wsgi_application
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 
 application = get_wsgi_application()
+
+from config.wsgi import application
+from whitenoise import WhiteNoise
+
+# Ajouter le media root à Whitenoise
+application = WhiteNoise(application, root='/app/media', prefix='media/')
