@@ -24,7 +24,7 @@ python manage.py shell << END
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
-username = "admin"
+username = "esther"
 email = "admin@example.com"
 password = "admin123"
 
