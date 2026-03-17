@@ -9,15 +9,34 @@
     <style>
         body { background-color: #f0fdfa; color: #1A1A1A; }
         .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(0, 108, 103, 0.2); }
+        @media (max-width: 1024px) {
+            aside {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease-in-out;
+                position: fixed;
+                z-index: 50;
+            }
+            aside.open {
+                transform: translateX(0);
+            }
+        }
     </style>
 </head>
-<body>
+<body class="min-h-screen">
+    <!-- Overlay pour mobile -->
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden transition-opacity" onclick="toggleSidebar()"></div>
+
     {% include 'partials/sidebar_admin.html' %}
     
-    <main class="ml-64 p-8">
-        <div class="mb-6">
-<a href="{% url 'liste_membres' %}" class="text-[#006C67] hover:underline text-sm">← Retour aux membres</a>
-<h1 class="text-3xl font-bold text-[#006C67] mt-2">Ajouter un Membre</h1>
+    <main class="lg:ml-64 p-4 lg:p-8 transition-all duration-300">
+        <div class="mb-6 flex items-start gap-4">
+            <button onclick="toggleSidebar()" class="lg:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
+            <div>
+                <a href="{% url 'liste_membres' %}" class="text-[#006C67] hover:underline text-sm">← Retour aux membres</a>
+                <h1 class="text-2xl lg:text-3xl font-bold text-[#006C67] mt-2">Ajouter un Membre</h1>
+            </div>
         </div>
 
         <div class="glass-card p-8 rounded-xl max-w-4xl">
@@ -105,5 +124,16 @@
             </form>
         </div>
     </main>
+
+    <script>
+        // Sidebar Toggle Script
+        function toggleSidebar() {
+            const sidebar = document.querySelector('aside');
+            const overlay = document.getElementById('sidebarOverlay');
+            
+            if (sidebar) sidebar.classList.toggle('open');
+            if (overlay) overlay.classList.toggle('hidden');
+        }
+    </script>
 </body>
 </html>
