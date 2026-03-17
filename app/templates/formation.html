@@ -4,18 +4,15 @@
 
 {% block content %}
 <div class="animate-fade-in">
-    <header class="mb-8">
-        <h1 class="text-4xl font-display font-bold text-pure-blue mb-2">Formation <span class="text-pure-green">Technique</span></h1>
-        <p class="text-gray-600">Assurer la qualité et l'excellence du service</p>
-    </header>
-
-
-
-    <div class="flex gap-4 mb-8">
-        <button onclick="openModal('formationModal')" class="px-6 py-3 blue-gradient text-white font-bold rounded-xl hover:shadow-lg transition-all">
+    <header class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-4">
+        <div>
+            <h1 class="text-4xl font-display font-bold text-pure-blue mb-2">Formation <span class="text-pure-green">Technique</span></h1>
+            <p class="text-gray-600">Assurer la qualité et l'excellence du service</p>
+        </div>
+        <button onclick="openModal('formationModal')" class="w-full lg:w-auto px-6 py-3 blue-gradient text-white font-bold rounded-xl hover:shadow-lg transition-all">
             + Nouvelle Formation
         </button>
-    </div>
+    </header>
 
     <div class="glass-card rounded-2xl overflow-hidden">
         <div class="p-6 border-b-2 border-pure-green/20">
