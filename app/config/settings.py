@@ -22,11 +22,11 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME', 'departements'),
-        'USER': os.getenv('DB_USER', 'esther'),
-        'PASSWORD': os.getenv('DB_PASSWORD', '123456'),
-        'HOST': os.getenv('DB_HOST', 'pg_departements'),  # IMPORTANT : pas localhost
-        'PORT': os.getenv('DB_PORT', '5432'),
+        'NAME': 'departements',
+        'USER': 'esther',
+        'PASSWORD': '123456',
+        'HOST': 'coodination-des-dpartements-departements-a4fmbm',  # Internal host
+        'PORT': '5432',  # Internal port
     }
 }
 
