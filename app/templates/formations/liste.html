@@ -3,247 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liste des Formations</title>
+    <title>Formations</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'deep-black': '#1A1A1A',
-                        'gold': '#FFD700',
-                        'gold-darker': '#B8860B',
-                        'soft-white': '#F5F5F5',
-                        'card-bg': '#262626',
-                    },
-                    fontFamily: {
-                        display: ['Outfit', 'Montserrat', 'sans-serif'],
-                    },
-                }
-            }
-        }
-    </script>
     <style>
         body { background-color: #f0fdfa; color: #1A1A1A; }
         .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(0, 108, 103, 0.2); }
+        @media (max-width: 1024px) {
+            aside {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease-in-out;
+                position: fixed;
+                z-index: 50;
+            }
+            aside.open {
+                transform: translateX(0);
+            }
+        }
     </style>
 </head>
 <body class="min-h-screen">
-    {% include 'partials/sidebar_admin.html' %}
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden transition-opacity" onclick="toggleSidebar()"></div>
 
-    <!-- Main Content -->
-    <main class="ml-64 p-8">
-        <!-- Header -->
-        <header class="mb-8">
-            <div class="flex justify-between items-center">
-                <div>
-<h1 class="text-3xl font-display font-black">Liste des <span class="text-[#006C67]">Formations</span></h1>
-                    <p class="text-gray-600">Gestion et validation des formations</p>
-                </div>
-<button onclick="openModal('formationModal')" class="px-6 py-3 bg-[#006C67] hover:bg-[#00554F] text-white font-bold rounded-xl transition-all">
-                    + Nouvelle Formation
+    {% include 'partials/sidebar_admin.html' %}
+    
+    <main class="lg:ml-64 p-4 lg:p-8 transition-all duration-300">
+        <div class="mb-8 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+            <div class="flex items-center gap-4 w-full lg:w-auto">
+                <button onclick="toggleSidebar()" class="lg:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                 </button>
+                <div>
+                    <h1 class="text-2xl lg:text-3xl font-bold text-[#006C67] mb-2">Formations</h1>
+                    <p class="text-gray-500">Catalogue et planning des formations</p>
+                </div>
             </div>
-        </header>
-        
+            <a href="{% url 'ajout_formation' %}" class="w-full lg:w-auto px-6 py-3 bg-[#006C67] hover:bg-[#00554F] text-white font-bold rounded-lg transition-all text-center">
+                + Nouvelle Formation
+            </a>
+        </div>
+
         {% if messages %}
         <div class="mb-6">
             {% for message in messages %}
-            <div class="glass-card p-4 rounded-lg mb-2 {% if message.tags == 'success' %}border-l-4 border-green-500{% elif message.tags == 'error' %}border-l-4 border-red-500{% else %}border-l-4 border-yellow-500{% endif %}">
+            <div class="p-4 rounded-lg mb-2 {% if message.tags == 'success' %}bg-green-100 text-green-700{% else %}bg-yellow-100 text-yellow-700{% endif %}">
                 {{ message }}
             </div>
             {% endfor %}
         </div>
         {% endif %}
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {% for formation in formations %}
-<div class="glass-card rounded-2xl p-6 hover:border-[#006C67]/30 transition-all">
-                {% if formation.image %}
-                <div class="mb-4">
-                    <img src="{{ formation.image.url }}" alt="{{ formation.titre }}" class="w-full h-40 object-cover rounded-lg">
-                </div>
-                {% endif %}
-                
-                <div class="flex justify-between items-start mb-3">
-<h3 class="text-xl font-bold text-gray-900">{{ formation.titre }}</h3>
-                    <span class="px-2 py-1 rounded-full text-xs {% if formation.statut_validation == 'VALIDEE' %}bg-green-500/20 text-green-400{% elif formation.statut_validation == 'REJETEE' %}bg-red-500/20 text-red-400{% else %}bg-yellow-500/20 text-yellow-400{% endif %}">
-                        {{ formation.get_statut_validation_display }}
-                    </span>
-                </div>
-<p class="text-gray-600 text-sm mb-4">{{ formation.description|truncatewords:20 }}</p>
-                
-                <div class="flex gap-2 mb-3">
-                    {% if formation.video %}
-                    <a href="{{ formation.video.url }}" target="_blank" class="text-xs px-3 py-1 bg-red-600/20 text-red-400 rounded-lg hover:bg-red-600/30 transition-colors">
-                        📹 Vidéo
-                    </a>
-                    {% endif %}
-                    {% if formation.supports %}
-                    <a href="{{ formation.supports.url }}" target="_blank" class="text-xs px-3 py-1 bg-blue-600/20 text-blue-400 rounded-lg hover:bg-blue-600/30 transition-colors">
-                        📄 PDF
-                    </a>
-                    {% endif %}
-                    {% if formation.lien_online %}
-                    <a href="{{ formation.lien_online }}" target="_blank" class="text-xs px-3 py-1 bg-purple-600/20 text-purple-400 rounded-lg hover:bg-purple-600/30 transition-colors">
-                        🌐 Lien
-                    </a>
-                    {% endif %}
-                </div>
-                
-<div class="text-gray-700 mb-3 space-y-2">
-                    <div class="flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                        <span>{{ formation.date_debut|date:"d/m/Y" }} - {{ formation.date_fin|date:"d/m/Y" }}</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                        <span>{{ formation.lieu|default:"Non défini" }}</span>
-                    </div>
-                    {% if formation.departement %}
-                    <div class="flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-<span class="text-[#006C67]">{{ formation.departement }}</span>
-                    </div>
+            <div class="glass-card rounded-2xl overflow-hidden flex flex-col h-full border border-gray-100 hover:shadow-xl transition-shadow">
+                <div class="relative h-48 bg-[#006C67]/10 flex items-center justify-center">
+                    {% if formation.image %}
+                        <img src="{{ formation.image.url }}" alt="{{ formation.titre }}" class="w-full h-full object-cover">
                     {% else %}
-                    <div class="flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-<span class="text-[#006C67]">Tous les départements</span>
-                    </div>
+                        <svg class="w-16 h-16 text-[#006C67]/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
                     {% endif %}
+                    
+                    <div class="absolute top-4 right-4">
+                        <span class="px-3 py-1 rounded-full text-xs font-bold shadow-sm
+                            {% if formation.statut_validation == 'VALIDEE' %}bg-green-100 text-green-700
+                            {% elif formation.statut_validation == 'REJETEE' %}bg-red-100 text-red-700
+                            {% else %}bg-yellow-100 text-yellow-700{% endif %}">
+                            {{ formation.get_statut_validation_display }}
+                        </span>
+                    </div>
                 </div>
-                
-                <div class="flex gap-2 mt-4 pt-4 border-t border-gray-700">
-                    <a href="{% url 'modifier_formation' formation.id %}" onclick="event.preventDefault(); openEditModal({{ formation.id }}, '{{ formation.titre|escapejs }}', '{{ formation.description|escapejs }}', '{{ formation.date_debut|date:"Y-m-d" }}', '{{ formation.date_fin|date:"Y-m-d" }}', '{{ formation.lieu|escapejs }}', '{{ formation.departement }}', {{ formation.est_en_ligne|yesno:"true,false" }}, '{{ formation.lien_online|escapejs }}');" class="flex-1 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold text-center transition-colors">
-                        ✏️ Modifier
-                    </a>
-                    <a href="{% url 'supprimer_formation' formation.id %}" onclick="return confirm('Voulez-vous vraiment supprimer cette formation ?');" class="flex-1 px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-semibold text-center transition-colors">
-                        🗑️ Supprimer
-                    </a>
+
+                <div class="p-6 flex-1 flex flex-col">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-xl font-bold text-gray-800">{{ formation.titre }}</h3>
+                    </div>
+                    
+                    <div class="flex items-center gap-2 text-sm text-[#006C67] mb-4">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        <span>{{ formation.date_debut|date:"d M Y" }}</span>
+                    </div>
+
+                    <p class="text-gray-500 text-sm mb-4 line-clamp-3 flex-1">{{ formation.description }}</p>
+
+                    <div class="border-t border-gray-100 pt-4 mt-auto">
+                        {% if formation.departement %}
+                        <p class="text-xs text-gray-400 mb-3 uppercase tracking-wider">Pour: {{ formation.departement }}</p>
+                        {% endif %}
+                        
+                        <div class="flex gap-2">
+                            {% if is_admin and formation.statut_validation == 'EN_ATTENTE' %}
+                                <a href="{% url 'valider_formation' formation.id %}" class="flex-1 px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-xs font-bold text-center transition-colors">Valider</a>
+                                <a href="{% url 'rejeter_formation' formation.id %}" class="flex-1 px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded text-xs font-bold text-center transition-colors">Rejeter</a>
+                            {% else %}
+                                <a href="{% url 'modifier_formation' formation.id %}" class="flex-1 px-3 py-2 border border-gray-300 text-gray-600 rounded text-center text-xs hover:bg-gray-50 transition-colors">Modifier</a>
+                            {% endif %}
+                            
+                            <form method="POST" action="{% url 'supprimer_formation' formation.id %}" onsubmit="return confirm('Supprimer cette formation ?');">
+                                {% csrf_token %}
+                                <button type="submit" class="px-3 py-2 bg-red-50 text-red-600 rounded hover:bg-red-100 transition-colors">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
             {% empty %}
-            <div class="col-span-full glass-card p-12 rounded-2xl text-center">
-                <svg class="w-16 h-16 mx-auto mb-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-<p class="text-gray-600 text-lg font-semibold">Aucune formation programmée</p>
+            <div class="col-span-full py-12 text-center text-gray-500">
+                <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                </div>
+                <p>Aucune formation enregistrée pour le moment.</p>
             </div>
             {% endfor %}
         </div>
     </main>
-
-    <!-- FORMATION MODAL -->
-    <div id="formationModal" class="fixed inset-0 z-[100] bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
-<div class="glass-card w-full max-w-2xl p-8 rounded-2xl border-2 border-[#006C67]/30 max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-2xl font-display font-bold text-[#006C67]">Nouvelle Formation</h3>
-                <button onclick="closeModal('formationModal')" class="text-gray-400 hover:text-white">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
-            </div>
-            
-            <form action="{% url 'ajout_formation' %}" method="POST" enctype="multipart/form-data" class="space-y-4">
-                {% csrf_token %}
-                <div>
-<label class="block text-sm font-semibold text-gray-200 mb-2">Titre</label>
-<input type="text" name="titre" placeholder="Titre de la formation" class="w-full p-3 rounded-lg bg-card-bg border-2 border-gray-700 text-white text-sm focus:border-[#006C67] focus:outline-none" required>
-                </div>
-                <div>
-<label class="block text-sm font-semibold text-gray-200 mb-2">Description</label>
-                    <textarea name="description" rows="3" class="w-full p-3 rounded-lg bg-card-bg border-2 border-gray-700 text-white text-sm focus:border-[#006C67] focus:outline-none" placeholder="Description de la formation..." required></textarea>
-                </div>
-                
-                <div>
-                    <label class="block text-sm font-semibold text-gray-200 mb-2">Département destinataire</label>
-                    <select name="departement_destinataire" class="w-full p-3 rounded-lg bg-card-bg border-2 border-gray-700 text-white text-sm focus:border-[#006C67] focus:outline-none">
-                        <option value="">Tous les départements</option>
-                        <option value="ADA">ADA</option>
-                        <option value="ADN">ADN</option>
-                        <option value="CLASSE_BATEME">Classe de Batême</option>
-                        <option value="COMMUNICATION">Communication</option>
-                        <option value="ECODIM">ECODIM</option>
-                        <option value="EVANGELISATION">Evangelisation</option>
-                        <option value="GESTION_CULTE">Gestion de Culte</option>
-                        <option value="LOGISTIQUE">Logistique</option>
-                        <option value="MUSIQUE_LOUANGE">Musique et Louange</option>
-                        <option value="PORTIER">Portier</option>
-                        <option value="SAINTE_CENE">Sainte Cène</option>
-                    </select>
-                </div>
-                
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-200 mb-2">Date début</label>
-                        <input type="date" name="date_debut" class="w-full p-3 rounded-lg bg-card-bg border-2 border-gray-700 text-white text-sm focus:border-[#006C67] focus:outline-none" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-200 mb-2">Date fin</label>
-                        <input type="date" name="date_fin" class="w-full p-3 rounded-lg bg-card-bg border-2 border-gray-700 text-white text-sm focus:border-[#006C67] focus:outline-none">
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-sm font-semibold text-gray-200 mb-2">Lieu</label>
-                    <input type="text" name="lieu" placeholder="Lieu de la formation" class="w-full p-3 rounded-lg bg-card-bg border-2 border-gray-700 text-white text-sm focus:border-[#006C67] focus:outline-none">
-                </div>
-                <div class="flex items-center gap-2">
-                    <input type="checkbox" name="est_en_ligne" id="est_en_ligne" class="w-4 h-4">
-                    <label for="est_en_ligne" class="text-sm text-gray-200">Formation en ligne</label>
-                </div>
-                <div>
-                    <label class="block text-sm font-semibold text-gray-200 mb-2">Lien en ligne</label>
-                    <input type="url" name="lien_online" placeholder="https://..." class="w-full p-3 rounded-lg bg-card-bg border-2 border-gray-700 text-white text-sm focus:border-[#006C67] focus:outline-none">
-                </div>
-                
-                <div class="border-t-2 border-gray-700 pt-4">
-                    <h4 class="text-sm font-bold text-[#006C67] mb-3">📎 Supports de formation</h4>
-                    <div class="space-y-3">
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-200 mb-2">📹 Vidéo</label>
-                            <input type="file" name="video" accept="video/*" class="w-full p-2 text-sm text-white bg-card-bg border-2 border-gray-700 rounded-lg focus:border-[#006C67] focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-200 mb-2">🖼️ Image/Affiche</label>
-                            <input type="file" name="image" accept="image/*" class="w-full p-2 text-sm text-white bg-card-bg border-2 border-gray-700 rounded-lg focus:border-[#006C67] focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-200 mb-2">📄 Document PDF</label>
-                            <input type="file" name="supports" accept=".pdf,.doc,.docx" class="w-full p-2 text-sm text-white bg-card-bg border-2 border-gray-700 rounded-lg focus:border-[#006C67] focus:outline-none">
-                        </div>
-                    </div>
-                </div>
-                
-<button type="submit" class="w-full py-3 bg-[#006C67] hover:bg-[#00554F] text-white font-bold rounded-lg text-sm transition-all">
-                    CRÉER LA FORMATION
-                </button>
-            </form>
-        </div>
-    </div>
-
     <script>
-        function openModal(modalId) {
-            document.getElementById(modalId).classList.remove('hidden');
-        }
-        
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.add('hidden');
-        }
-        
-        function openEditModal(id, titre, description, dateDebut, dateFin, lieu, departement, estEnLigne, lienOnline) {
-            // Remplir le formulaire avec les données existantes
-            const form = document.querySelector('#formationModal form');
-            form.action = '/formations/' + id + '/modifier/';
-            form.querySelector('[name="titre"]').value = titre;
-            form.querySelector('[name="description"]').value = description;
-            form.querySelector('[name="date_debut"]').value = dateDebut;
-            form.querySelector('[name="date_fin"]').value = dateFin || '';
-            form.querySelector('[name="lieu"]').value = lieu || '';
-            form.querySelector('[name="departement_destinataire"]').value = departement || '';
-            form.querySelector('[name="est_en_ligne"]').checked = estEnLigne;
-            form.querySelector('[name="lien_online"]').value = lienOnline || '';
-            document.querySelector('#formationModal h3').textContent = 'Modifier la Formation';
-            document.querySelector('#formationModal button[type="submit"]').textContent = 'MODIFIER LA FORMATION';
-            openModal('formationModal');
-        }
+        function toggleSidebar() { const sidebar = document.querySelector('aside'); const overlay = document.getElementById('sidebarOverlay'); if (sidebar) sidebar.classList.toggle('open'); if (overlay) overlay.classList.toggle('hidden'); }
     </script>
 </body>
 </html>

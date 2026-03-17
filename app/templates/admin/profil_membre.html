@@ -25,18 +25,39 @@
     <style>
         body { background-color: #0f0f0f; color: #FFFFFF; }
         .glass-card { background: rgba(38, 38, 38, 0.6); backdrop-filter: blur(10px); border: 1px solid rgba(255, 215, 0, 0.1); }
+        @media (max-width: 1024px) {
+            aside {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease-in-out;
+                position: fixed;
+                z-index: 50;
+            }
+            aside.open {
+                transform: translateX(0);
+            }
+        }
     </style>
 </head>
 <body class="min-h-screen">
+    <!-- Overlay pour mobile -->
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden transition-opacity" onclick="toggleSidebar()"></div>
+
     {% include 'partials/sidebar_admin.html' %}
 
-    <main class="ml-64 p-8">
-        <header class="flex justify-between items-center mb-8">
-            <div>
-                <h1 class="text-3xl font-display font-black">Profil du <span class="text-primary-age">Membre</span></h1>
-                <p class="text-gray-500">{{ membre.prenom }} {{ membre.nom }}</p>
+    <main class="lg:ml-64 p-4 lg:p-8 transition-all duration-300">
+        <header class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-4">
+            <div class="flex items-center gap-4 w-full lg:w-auto">
+                <button onclick="toggleSidebar()" class="lg:hidden p-2 rounded-lg text-gray-400 hover:bg-gray-800 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div>
+                    <h1 class="text-2xl lg:text-3xl font-display font-black">Profil du <span class="text-primary-age">Membre</span></h1>
+                    <p class="text-gray-500">{{ membre.prenom }} {{ membre.nom }}</p>
+                </div>
             </div>
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-4 w-full lg:w-auto justify-end">
                 <a href="{% url 'modifier_membre' membre.id %}" class="px-4 py-2 bg-primary-age text-deep-black rounded-lg font-bold text-sm hover:bg-yellow-400 transition-colors">
                     Modifier
                 </a>
@@ -78,7 +99,7 @@
             <div class="glass-card p-6 rounded-2xl col-span-2">
                 <h3 class="font-bold text-lg mb-4 text-primary-age">Informations supplémentaires</h3>
                 
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div class="p-4 bg-white/5 rounded-lg">
                         <p class="text-gray-500 text-xs uppercase">Est Sentinelle</p>
                         <p class="font-semibold {% if membre.est_sentinelle %}text-purple-400{% else %}text-gray-500{% endif %}">
@@ -135,5 +156,16 @@
             </div>
         </div>
     </main>
+
+    <script>
+        // Sidebar Toggle
+        function toggleSidebar() {
+            const sidebar = document.querySelector('aside');
+            const overlay = document.getElementById('sidebarOverlay');
+            
+            if (sidebar) sidebar.classList.toggle('open');
+            if (overlay) overlay.classList.toggle('hidden');
+        }
+    </script>
 </body>
 </html>

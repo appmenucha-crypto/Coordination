@@ -3,196 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Incidents Ouverts</title>
+    <title>Suivi des Incidents</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         body { background-color: #f0fdfa; color: #1A1A1A; }
         .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(0, 108, 103, 0.2); }
-        .custom-input { background: white; border: 1px solid rgba(0, 108, 103, 0.3); color: #1A1A1A; }
+        @media (max-width: 1024px) {
+            aside {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease-in-out;
+                position: fixed;
+                z-index: 50;
+            }
+            aside.open {
+                transform: translateX(0);
+            }
+        }
     </style>
 </head>
 <body class="min-h-screen">
-    <!-- Sidebar Admin -->
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden transition-opacity" onclick="toggleSidebar()"></div>
+
     {% include 'partials/sidebar_admin.html' %}
-
-    <!-- Main Content -->
-    <main class="ml-64 p-8">
-<div class="animate-fade-in">
-    <div class="flex flex-col md:flex-row justify-between items-end mb-6 gap-4">
-        <div>
-            <h2 class="text-3xl font-display font-bold text-[#B21E28]">INCIDENTS OUVERTS</h2>
-            <p class="text-gray-500 uppercase tracking-widest text-xs">Gestion des incidents et discipline</p>
-        </div>
-    </div>
-
-    <!-- Stats -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div class="glass-card p-4 rounded-xl">
-            <p class="text-gray-500 text-xs uppercase">Total Ouverts</p>
-            <p class="text-2xl font-bold text-[#B21E28]">{{ incidents.paginator.count }}</p>
-        </div>
-        <div class="glass-card p-4 rounded-xl">
-            <p class="text-gray-500 text-xs uppercase">En Cours</p>
-            <p class="text-2xl font-bold text-[#006C67]">{{ en_cours_count|default:0 }}</p>
-        </div>
-        <div class="glass-card p-4 rounded-xl">
-            <p class="text-gray-500 text-xs uppercase">Non résolus</p>
-            <p class="text-2xl font-bold text-[#B21E28]">{{ non_resolus_count|default:0 }}</p>
-        </div>
-        <div class="glass-card p-4 rounded-xl">
-            <p class="text-gray-500 text-xs uppercase">Résolus ce mois</p>
-            <p class="text-2xl font-bold text-[#006C67]">{{ resolus_mois_count|default:0 }}</p>
-        </div>
-    </div>
-
-    <!-- Filters -->
-    <div class="glass-card p-4 rounded-xl mb-6">
-        <form method="GET" class="flex gap-4">
-            <div class="flex-1">
-                <label class="block text-xs text-gray-500 mb-1">Filtrer par type</label>
-                <select name="type" class="w-full p-2 rounded-lg custom-input text-sm" onchange="this.form.submit()">
-                    <option value="">Tous les types</option>
-                    <option value="VERBAL">Avertissement verbal</option>
-                    <option value="ECRIT">Avertissement écrit</option>
-                    <option value="CONFLIT">Conflit entre membres</option>
-                    <option value="COMPORTEMENT">Mauvais comportement</option>
-                    <option value="AUTRE">Autre</option>
-                </select>
-            </div>
-            <div class="flex items-end">
-                <a href="{% url 'liste_incidents' %}" class="px-4 py-2 border border-[#006C67] text-[#006C67] rounded-lg hover:bg-[#006C67]/10">
-                    Réinitialiser
-                </a>
-            </div>
-        </form>
-    </div>
-
-    <!-- Incidents List -->
-    {% if incidents %}
-    <div class="space-y-4">
-        {% for incident in incidents %}
-        <div class="glass-card p-6 rounded-2xl {% if incident.statut == 'OUVERT' %}border-l-4 border-[#B21E28]{% elif incident.statut == 'EN_COURS' %}border-l-4 border-[#006C67]{% endif %}">
-            <div class="flex justify-between items-start mb-4">
-                <div>
-                    <div class="flex items-center gap-3 mb-2">
-                        <span class="px-3 py-1 {% if incident.statut == 'OUVERT' %}bg-[#B21E28]/20 text-[#B21E28]{% elif incident.statut == 'EN_COURS' %}bg-[#006C67]/20 text-[#006C67]{% else %}bg-[#006C67]/20 text-[#006C67]{% endif %} rounded-full text-xs">
-                            {{ incident.get_statut_display }}
-                        </span>
-                        <span class="px-3 py-1 bg-gray-200 text-gray-600 rounded-full text-xs">
-                            {{ incident.get_type_incident_display }}
-                        </span>
-                    </div>
-                    <h3 class="font-bold text-lg">{{ incident.titre }}</h3>
-                </div>
-                <div class="text-right">
-                    <p class="text-gray-500 text-sm">{{ incident.date_incident }}</p>
-                </div>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div>
-                    <p class="text-gray-500 text-xs uppercase mb-1">Membre concerné</p>
-                    <p class="font-bold">{{ incident.membre_concerne.prenom }} {{ incident.membre_concerne.nom }}</p>
-                </div>
-                <div>
-                    <p class="text-gray-500 text-xs uppercase mb-1">Déclaré par</p>
-                    <p class="font-bold">{% if incident.declare_par %}{{ incident.declare_par.prenom }} {{ incident.declare_par.nom }}{% else %}Inconnu{% endif %}</p>
-                </div>
-            </div>
-            
-            <div class="mb-4">
-                <p class="text-gray-500 text-xs uppercase mb-1">Description</p>
-                <p class="text-sm">{{ incident.description }}</p>
-            </div>
-            
-            {% if incident.resolution %}
-            <div class="mb-4">
-                <p class="text-gray-500 text-xs uppercase mb-1">Résolution</p>
-                <p class="text-sm text-[#006C67]">{{ incident.resolution }}</p>
-            </div>
-            {% endif %}
-            
-            <div class="flex justify-end gap-2">
-                {% if incident.statut != 'RESOLU' and incident.statut != 'CLOS' %}
-                <button onclick="openModal('resolutionModal{{ incident.id }}')" class="px-4 py-2 bg-[#006C67] text-white rounded-lg text-sm font-bold">
-                    Marquer résolu
+    
+    <main class="lg:ml-64 p-4 lg:p-8 transition-all duration-300">
+        <div class="mb-8 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+            <div class="flex items-center gap-4 w-full lg:w-auto">
+                <button onclick="toggleSidebar()" class="lg:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                 </button>
-                {% endif %}
-                <a href="{% url 'profil_membre' incident.membre_concerne.id %}" class="px-4 py-2 border border-[#006C67] text-[#006C67] rounded-lg text-sm">
-                    Voir profil
-                </a>
+                <div>
+                    <h1 class="text-2xl lg:text-3xl font-bold text-[#B21E28] mb-2">Incidents & Discipline</h1>
+                    <p class="text-gray-500">Suivi des cas signalés</p>
+                </div>
+            </div>
+            <a href="{% url 'rapport_incident' %}" class="w-full lg:w-auto px-6 py-3 bg-[#B21E28] hover:bg-[#8B1820] text-white font-bold rounded-lg transition-all flex justify-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                Signaler un incident
+            </a>
+        </div>
+
+        <!-- Stats rapides -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+            <div class="glass-card p-6 rounded-xl border-l-4 border-[#B21E28]">
+                <p class="text-gray-500 text-xs uppercase">En cours</p>
+                <p class="text-3xl font-black text-[#B21E28] mt-1">{{ en_cours_count }}</p>
+            </div>
+            <div class="glass-card p-6 rounded-xl border-l-4 border-[#006C67]">
+                <p class="text-gray-500 text-xs uppercase">Résolus ce mois</p>
+                <p class="text-3xl font-black text-[#006C67] mt-1">{{ resolus_mois_count }}</p>
+            </div>
+        </div>
+
+        <div class="glass-card rounded-2xl overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead class="bg-[#B21E28]/5 text-gray-600 uppercase text-xs">
+                        <tr>
+                            <th class="p-4">Date</th>
+                            <th class="p-4">Type</th>
+                            <th class="p-4">Membre concerné</th>
+                            <th class="p-4">Titre</th>
+                            <th class="p-4">Statut</th>
+                            <th class="p-4">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        {% for incident in incidents %}
+                        <tr class="hover:bg-red-50/50 transition-colors">
+                            <td class="p-4 text-sm">{{ incident.date_incident|date:"d/m/Y" }}</td>
+                            <td class="p-4 text-sm font-semibold">{{ incident.get_type_incident_display }}</td>
+                            <td class="p-4 text-sm">
+                                <a href="{% url 'profil_membre' incident.membre_concerne.id %}" class="text-[#006C67] hover:underline font-medium">
+                                    {{ incident.membre_concerne.nom_complet }}
+                                </a>
+                            </td>
+                            <td class="p-4 text-sm">{{ incident.titre }}</td>
+                            <td class="p-4">
+                                <span class="px-3 py-1 rounded-full text-xs font-bold
+                                    {% if incident.statut == 'OUVERT' %}bg-red-100 text-red-700
+                                    {% elif incident.statut == 'EN_COURS' %}bg-orange-100 text-orange-700
+                                    {% elif incident.statut == 'RESOLU' %}bg-green-100 text-green-700
+                                    {% else %}bg-gray-100 text-gray-600{% endif %}">
+                                    {{ incident.get_statut_display }}
+                                </span>
+                            </td>
+                            <td class="p-4">
+                                {% if incident.statut != 'RESOLU' and incident.statut != 'CLOS' %}
+                                <button onclick="openResolveModal({{ incident.id }}, '{{ incident.titre }}')" class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded text-xs">
+                                    Résoudre
+                                </button>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="p-8 text-center text-gray-500">Aucun incident à afficher</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
             
-            <!-- Resolution Modal -->
-            {% if incident.statut != 'RESOLU' and incident.statut != 'CLOS' %}
-            <div id="resolutionModal{{ incident.id }}" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center">
-                <div class="glass-card p-6 rounded-2xl max-w-md w-full mx-4">
-                    <h3 class="font-bold text-lg text-[#006C67] mb-4">Résoudre l'incident</h3>
-                    <form action="{% url 'resoudre_incident' incident.id %}" method="POST">
-                        {% csrf_token %}
-                        <div class="mb-4">
-                            <label class="block text-xs text-gray-500 mb-1">Résolution</label>
-                            <textarea name="resolution" rows="4" class="w-full p-3 rounded-lg custom-input text-sm" placeholder="Décrivez la résolution..." required></textarea>
-                        </div>
-                        <div class="flex gap-2 justify-end">
-                            <button type="button" onclick="closeModal('resolutionModal{{ incident.id }}')" class="px-4 py-2 border border-gray-400 text-gray-600 rounded-lg text-sm">Annuler</button>
-                            <button type="submit" class="px-4 py-2 bg-[#006C67] text-white rounded-lg text-sm font-bold">Enregistrer</button>
-                        </div>
-                    </form>
-                </div>
+            <!-- Pagination -->
+            {% if incidents.has_other_pages %}
+            <div class="p-4 border-t border-gray-100 flex justify-center gap-2">
+                {% if incidents.has_previous %}<a href="?page={{ incidents.previous_page_number }}" class="px-3 py-1 border rounded hover:bg-gray-50">Précédent</a>{% endif %}
+                <span class="px-3 py-1 text-gray-500">Page {{ incidents.number }}</span>
+                {% if incidents.has_next %}<a href="?page={{ incidents.next_page_number }}" class="px-3 py-1 border rounded hover:bg-gray-50">Suivant</a>{% endif %}
             </div>
             {% endif %}
         </div>
-        {% endfor %}
-    </div>
-
-    <!-- Pagination -->
-    {% if incidents.has_other_pages %}
-    <div class="flex justify-center gap-2 mt-6">
-        {% if incidents.has_previous %}
-        <a href="?page={{ incidents.previous_page_number }}" class="px-4 py-2 border border-[#006C67] text-[#006C67] rounded-lg">Précédent</a>
-        {% endif %}
-        
-        <span class="px-4 py-2 text-gray-500">Page {{ incidents.number }} sur {{ incidents.paginator.num_pages }}</span>
-        
-        {% if incidents.has_next %}
-        <a href="?page={{ incidents.next_page_number }}" class="px-4 py-2 border border-[#006C67] text-[#006C67] rounded-lg">Suivant</a>
-        {% endif %}
-    </div>
-    {% endif %}
-
-    {% else %}
-    <div class="glass-card p-12 rounded-2xl text-center">
-        <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-[#006C67]/20 flex items-center justify-center">
-            <svg class="w-8 h-8 text-[#006C67]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-            </svg>
-        </div>
-        <h3 class="text-xl font-bold text-gray-800 mb-2">Aucun incident ouvert</h3>
-        <p class="text-gray-500">Tous les incidents ont été résolus.</p>
-    </div>
-    {% endif %}
     </main>
-
-<script>
-    function openModal(modalId) {
-        document.getElementById(modalId).classList.remove('hidden');
-    }
-    
-    function closeModal(modalId) {
-        document.getElementById(modalId).classList.add('hidden');
-    }
-    
-    // Close modal on outside click
-    document.querySelectorAll('[id^="resolutionModal"]').forEach(modal => {
-        modal.addEventListener('click', function(e) {
-            if (e.target === this) {
-                this.classList.add('hidden');
-            }
-        });
-    });
-</script>
+    <script>
+        function toggleSidebar() { const sidebar = document.querySelector('aside'); const overlay = document.getElementById('sidebarOverlay'); if (sidebar) sidebar.classList.toggle('open'); if (overlay) overlay.classList.toggle('hidden'); }
+    </script>
 </body>
 </html>
-
+```

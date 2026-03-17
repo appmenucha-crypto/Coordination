@@ -27,18 +27,39 @@
         .glass-card { background: rgba(38, 38, 38, 0.6); backdrop-filter: blur(10px); border: 1px solid rgba(0, 108, 103, 0.2); }
         .custom-input { background: #333; border: 1px solid #444; color: white; }
         .custom-input:focus { border-color: #006C67; outline: none; }
+        @media (max-width: 1024px) {
+            aside {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease-in-out;
+                position: fixed;
+                z-index: 50;
+            }
+            aside.open {
+                transform: translateX(0);
+            }
+        }
     </style>
 </head>
 <body class="min-h-screen">
+    <!-- Overlay pour mobile -->
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden transition-opacity" onclick="toggleSidebar()"></div>
+
     {% include 'partials/sidebar_admin.html' %}
 
-    <main class="ml-64 p-8">
-        <header class="flex justify-between items-center mb-8">
-            <div>
-                <h1 class="text-3xl font-display font-black">Modifier le <span class="text-primary-age">Membre</span></h1>
-                <p class="text-gray-500">Modification des informations de <span class="text-white font-semibold">{{ membre.prenom }} {{ membre.nom }}</span></p>
+    <main class="lg:ml-64 p-4 lg:p-8 transition-all duration-300">
+        <header class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-4">
+            <div class="flex items-center gap-4 w-full lg:w-auto">
+                <button onclick="toggleSidebar()" class="lg:hidden p-2 rounded-lg text-gray-400 hover:bg-gray-800 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div>
+                    <h1 class="text-2xl lg:text-3xl font-display font-black">Modifier le <span class="text-primary-age">Membre</span></h1>
+                    <p class="text-gray-500">Modification des informations de <span class="text-white font-semibold">{{ membre.prenom }} {{ membre.nom }}</span></p>
+                </div>
             </div>
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-4 w-full lg:w-auto justify-end">
                 <a href="{% url 'liste_membres' %}" class="px-4 py-2 border border-gray-600 text-gray-500 rounded-lg hover:bg-gray-800 transition-colors">
                     Retour à la liste
                 </a>
@@ -151,6 +172,15 @@
                 groupeDiv.classList.add('hidden');
             }
         });
+
+        // Sidebar Toggle
+        function toggleSidebar() {
+            const sidebar = document.querySelector('aside');
+            const overlay = document.getElementById('sidebarOverlay');
+            
+            if (sidebar) sidebar.classList.toggle('open');
+            if (overlay) overlay.classList.toggle('hidden');
+        }
     </script>
 </body>
 </html>
