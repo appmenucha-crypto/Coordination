@@ -13,10 +13,15 @@ from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 
+# 1. Obtenir l'application Django de base
 application = get_wsgi_application()
 
-from config.wsgi import application
+# 2. Importer WhiteNoise
 from whitenoise import WhiteNoise
 
-# Ajouter le media root à Whitenoise
-application = WhiteNoise(application, root='/app/media', prefix='media/')
+# 3. Envelopper l'application avec WhiteNoise pour les fichiers statiques (pratique standard)
+application = WhiteNoise(application)
+
+# 4. Ajouter le répertoire des médias pour que WhiteNoise puisse aussi les servir
+# Note : Assurez-vous que votre MEDIA_ROOT dans settings.py correspond à '/app/media'
+application.add_files('/app/media', prefix='media/')
