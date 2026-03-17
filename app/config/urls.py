@@ -3,9 +3,10 @@ Configuration des URLs pour le projet
 """
 
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.static import serve
 
 from GestionDepartement.views import (
     departement,
@@ -181,6 +182,10 @@ urlpatterns = [
     path('export-finances-pdf/', export_finances_pdf, name='export_finances_pdf'),
 ]
 
-# Servir les fichiers médias en mode développement
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# Configuration pour servir les fichiers médias (Images, Vidéos)
+# Cette méthode force Django à servir les fichiers médias même en production
+urlpatterns += [
+    re_path(r'^media/(?P<path>.*)$', serve, {
+        'document_root': settings.MEDIA_ROOT,
+    }),
+]

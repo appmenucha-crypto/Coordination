@@ -21,7 +21,3 @@ from whitenoise import WhiteNoise
 
 # 3. Envelopper l'application avec WhiteNoise pour les fichiers statiques (pratique standard)
 application = WhiteNoise(application)
-
-# 4. Ajouter le répertoire des médias pour que WhiteNoise puisse aussi les servir
-# Note : Assurez-vous que votre MEDIA_ROOT dans settings.py correspond à '/app/media'
-application.add_files('/app/media', prefix='media/')
