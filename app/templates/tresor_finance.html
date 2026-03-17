@@ -44,8 +44,11 @@
     </style>
 </head>
 <body class="min-h-screen">
+    <!-- Overlay pour mobile -->
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden transition-opacity" onclick="toggleSidebar()"></div>
+
     <!-- Sidebar -->
-    <aside class="fixed left-0 top-0 h-full w-64 bg-deep-black border-r border-gold/20 z-40">
+    <aside class="fixed left-0 top-0 h-full w-64 bg-deep-black border-r border-gold/20 z-50 transform -translate-x-full lg:translate-x-0 transition-transform duration-300">
         <div class="p-6">
             <div class="w-12 h-12 gradient-gold rounded-full flex items-center justify-center text-deep-black font-bold text-xl mb-4">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -85,11 +88,17 @@
     </aside>
 
     <!-- Main Content -->
-    <main class="ml-64 p-8">
+    <main class="lg:ml-64 p-4 lg:p-8 transition-all duration-300">
         <!-- Header -->
-        <header class="flex justify-between items-center mb-8">
-            <div>
-                <h1 class="text-3xl font-display font-black">Commission <span class="text-gold">Trésor, Finance</span> et Gestion des Ressources</h1>
+        <header class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-4">
+            <div class="w-full">
+                <div class="flex items-center gap-4 mb-2">
+                    <button onclick="toggleSidebar()" class="lg:hidden p-2 rounded-lg text-gray-400 hover:bg-white/5 border border-gray-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
+                    <h1 class="text-2xl lg:text-3xl font-display font-black">Commission <span class="text-gold">Trésor, Finance</span></h1>
+                </div>
+                <p class="text-lg text-gold hidden lg:block">et Gestion des Ressources</p>
                 <p class="text-gray-400">Bienvenue, <span class="text-white font-semibold">{{ user.username }}</span></p>
             </div>
             <div class="flex items-center gap-4">
@@ -334,6 +343,16 @@
             </div>
         </div>
     </main>
+
+    <script>
+        // Sidebar Toggle
+        function toggleSidebar() {
+            const sidebar = document.querySelector('aside');
+            const overlay = document.getElementById('sidebarOverlay');
+            
+            if (sidebar) sidebar.classList.toggle('-translate-x-full');
+            if (overlay) overlay.classList.toggle('hidden');
+        }
+    </script>
 </body>
 </html>
-
