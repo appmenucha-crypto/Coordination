@@ -45,7 +45,7 @@
     <div class="glass-card rounded-2xl overflow-hidden mb-8">
         <div class="p-6 border-b-2 border-pure-blue/20 flex justify-between items-center">
             <h3 class="font-bold text-xl text-pure-blue">Groupes de Service</h3>
-            <button onclick="document.getElementById('modalGroupe').classList.remove('hidden')" class="px-6 py-3 blue-gradient text-white rounded-xl font-bold text-sm hover:shadow-lg transition-all">
+            <button onclick="document.getElementById('modalGroupe').classList.remove('hidden')" class="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl font-bold text-sm hover:shadow-lg transition-all">
                 + Créer un groupe
             </button>
         </div>
@@ -109,7 +109,7 @@
         <div class="p-6 border-b-2 border-pure-blue/20 flex justify-between items-center">
             <h3 class="font-bold text-xl text-pure-blue">Planning des Services à Venir</h3>
             {% if groupes %}
-            <button onclick="openModal('modalPlanning')" class="px-6 py-3 green-gradient text-white rounded-xl font-bold text-sm hover:shadow-lg transition-all">
+            <button onclick="openModal('modalPlanning')" class="px-6 py-3 bg-gradient-to-r from-green-600 to-green-800 text-white rounded-xl font-bold text-sm hover:shadow-lg transition-all">
                 + Créer un planning
             </button>
             {% endif %}
@@ -209,7 +209,7 @@
             </div>
             <div class="flex gap-4 mt-6">
                 <button type="button" onclick="closeModal('modalPlanning')" class="flex-1 px-4 py-3 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold rounded-xl transition-colors">Annuler</button>
-                <button type="submit" class="flex-1 px-4 py-3 green-gradient text-white font-bold rounded-xl hover:shadow-lg transition-all">Créer</button>
+                <button type="submit" class="flex-1 px-4 py-3 bg-gradient-to-r from-green-600 to-green-800 text-white font-bold rounded-xl hover:shadow-lg transition-all">Créer</button>
             </div>
         </form>
     </div>
@@ -246,7 +246,7 @@
             </div>
             <div class="flex gap-4 mt-6">
                 <button type="button" onclick="closeModal('modalGroupe')" class="flex-1 px-4 py-3 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold rounded-xl transition-colors">Annuler</button>
-                <button type="submit" class="flex-1 px-4 py-3 blue-gradient text-white font-bold rounded-xl hover:shadow-lg transition-all">Créer</button>
+                <button type="submit" class="flex-1 px-4 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-bold rounded-xl hover:shadow-lg transition-all">Créer</button>
             </div>
         </form>
     </div>
