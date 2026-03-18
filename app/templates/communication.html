@@ -58,21 +58,21 @@
         </div>
 
         <div class="space-y-6">
-            <div class="glass-card p-6 rounded-2xl border-2 border-pure-blue">
-                <h3 class="font-bold text-xl text-pure-blue mb-4">Publier une Actualité</h3>
+            <div class="glass-card p-6 rounded-2xl border-2 border-depart-green">
+                <h3 class="font-bold text-xl text-depart-green mb-4">Publier une Actualité</h3>
                 <form action="{% url 'ajout_actualite' %}" method="POST" class="space-y-4" id="actualiteForm" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Titre</label>
-                        <input type="text" name="titre" placeholder="Titre de l'actualité" class="w-full p-3 rounded-lg bg-white border-2 border-gray-300 text-gray-800 text-sm focus:border-pure-blue focus:outline-none" required>
+                        <input type="text" name="titre" placeholder="Titre de l'actualité" class="w-full p-3 rounded-lg bg-white border-2 border-gray-300 text-gray-800 text-sm focus:border-depart-green focus:outline-none" required>
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Contenu</label>
-                        <textarea name="contenu" rows="4" placeholder="Contenu de l'actualité..." class="w-full p-3 rounded-lg bg-white border-2 border-gray-300 text-gray-800 text-sm focus:border-pure-blue focus:outline-none" required></textarea>
+                        <textarea name="contenu" rows="4" placeholder="Contenu de l'actualité..." class="w-full p-3 rounded-lg bg-white border-2 border-gray-300 text-gray-800 text-sm focus:border-depart-green focus:outline-none" required></textarea>
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Catégorie</label>
-                        <select name="categorie" class="w-full p-3 rounded-lg bg-white border-2 border-gray-300 text-gray-800 text-sm focus:border-pure-blue focus:outline-none">
+                        <select name="categorie" class="w-full p-3 rounded-lg bg-white border-2 border-gray-300 text-gray-800 text-sm focus:border-depart-green focus:outline-none">
                             <option value="CELEBRATION">Célébration</option>
                             <option value="FORMATION">Formation</option>
                             <option value="COMMUNION">Communion</option>
@@ -82,35 +82,35 @@
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Image (optionnel)</label>
-                        <input type="file" name="image" id="image" accept="image/*" class="w-full p-3 rounded-lg bg-white border-2 border-gray-300 text-gray-800 text-sm focus:border-pure-blue focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-pure-blue file:text-white hover:file:bg-pure-blue-dark">
+                        <input type="file" name="image" id="image" accept="image/*" class="w-full p-3 rounded-lg bg-white border-2 border-gray-300 text-gray-800 text-sm focus:border-depart-green focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-depart-green file:text-white hover:file:bg-depart-green-dark">
                     </div>
-                    <button type="submit" class="w-full py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-bold rounded-lg text-sm hover:shadow-lg transition-all">PUBLIER</button>
+                    <button type="submit" class="w-full py-3 bg-depart-green hover:bg-depart-green-dark text-white font-bold rounded-lg text-sm hover:shadow-lg transition-all">PUBLIER</button>
                 </form>
             </div>
             
             <div class="glass-card p-6 rounded-2xl">
-                <h3 class="font-bold text-xl text-pure-green-dark mb-4">Galerie Souvenirs</h3>
+                <h3 class="font-bold text-xl text-depart-gold mb-4">Galerie Souvenirs</h3>
                 <p class="text-sm text-gray-600 mb-4">Documenter les moments forts (photos & vidéos) pour renforcer la cohésion</p>
                 
-                <form action="{% url 'ajout_media' %}" method="POST" enctype="multipart/form-data" class="mb-6 p-4 bg-green-50 rounded-lg border-2 border-dashed border-pure-green">
+                <form action="{% url 'ajout_media' %}" method="POST" enctype="multipart/form-data" class="mb-6 p-4 bg-gray-50 rounded-lg border-2 border-dashed border-depart-gold">
                     {% csrf_token %}
                     <div class="space-y-3">
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Titre</label>
-                            <input type="text" name="titre" placeholder="Titre du média" class="w-full p-2 rounded-lg bg-white border-2 border-gray-300 text-gray-800 text-sm focus:border-pure-green focus:outline-none" required>
+                            <input type="text" name="titre" placeholder="Titre du média" class="w-full p-2 rounded-lg bg-white border-2 border-gray-300 text-gray-800 text-sm focus:border-depart-gold focus:outline-none" required>
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Type de média</label>
-                            <select name="type_media" id="typeMedia" class="w-full p-2 rounded-lg bg-white border-2 border-gray-300 text-gray-800 text-sm focus:border-pure-green focus:outline-none" required>
+                            <select name="type_media" id="typeMedia" class="w-full p-2 rounded-lg bg-white border-2 border-gray-300 text-gray-800 text-sm focus:border-depart-gold focus:outline-none" required>
                                 <option value="image">Photo</option>
                                 <option value="video">Vidéo</option>
                             </select>
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Fichier</label>
-                            <input type="file" name="fichier" id="fichierMedia" accept="image/*,video/*" class="w-full p-2 rounded-lg bg-white border-2 border-gray-300 text-gray-800 text-sm focus:border-pure-green focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-pure-green file:text-white hover:file:bg-pure-green-dark" required>
+                            <input type="file" name="fichier" id="fichierMedia" accept="image/*,video/*" class="w-full p-2 rounded-lg bg-white border-2 border-gray-300 text-gray-800 text-sm focus:border-depart-gold focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-depart-gold file:text-white hover:file:bg-depart-gold-light" required>
                         </div>
-                        <button type="submit" class="w-full py-2 bg-gradient-to-r from-green-600 to-green-800 text-white font-bold rounded-lg text-sm hover:shadow-lg transition-all">AJOUTER</button>
+                        <button type="submit" class="w-full py-2 bg-depart-gold hover:bg-depart-gold-light text-white font-bold rounded-lg text-sm hover:shadow-lg transition-all">AJOUTER</button>
                     </div>
                 </form>
                 
