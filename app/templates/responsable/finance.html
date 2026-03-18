@@ -4,9 +4,11 @@
 
 {% block content %}
 <div class="animate-fade-in">
-    <header class="mb-8">
-        <h1 class="text-4xl font-display font-bold text-pure-blue mb-2">Finances <span class="text-pure-green">{{ nom_departement }}</span></h1>
-        <p class="text-gray-600">Gestion des ressources financières du département</p>
+    <header class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+        <div>
+            <h1 class="text-3xl md:text-4xl font-display font-bold text-pure-blue mb-2">Finances <span class="text-pure-green">{{ nom_departement }}</span></h1>
+            <p class="text-gray-600">Gestion des ressources financières du département</p>
+        </div>
     </header>
 
     {% if messages %}
@@ -40,13 +42,13 @@
             </h3>
             <div class="space-y-4">
                 {% for transaction in transactions_recents %}
-                <div class="flex items-center justify-between p-4 bg-blue-50 rounded-xl hover:bg-blue-100 transition-colors">
-                    <div class="flex items-center gap-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-blue-50 rounded-xl hover:bg-blue-100 transition-colors gap-4">
+                    <div class="flex items-center gap-4 w-full">
                         <div class="w-12 h-12 rounded-full {% if transaction.type_mouvement == 'ENTREE' %}bg-green-100{% else %}bg-red-100{% endif %} flex items-center justify-center {% if transaction.type_mouvement == 'ENTREE' %}text-green-700{% else %}text-red-700{% endif %} font-bold text-sm">
                             {% if transaction.type_mouvement == 'ENTREE' %}IN{% else %}OUT{% endif %}
                         </div>
-                        <div>
-                            <p class="font-bold text-sm text-gray-800">{{ transaction.description }}</p>
+                        <div class="overflow-hidden">
+                            <p class="font-bold text-sm text-gray-800 truncate">{{ transaction.description }}</p>
                             <p class="text-xs text-gray-500 uppercase">{{ transaction.date_transaction }} • {{ transaction.get_categorie_display|default:transaction.categorie }}</p>
                             {% if transaction.membre %}
                             <p class="text-xs text-pure-blue font-semibold">{{ transaction.membre.prenom }} {{ transaction.membre.nom }}</p>

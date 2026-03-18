@@ -1,414 +1,137 @@
 {% extends 'responsable/base_responsable.html' %}
 
-{% block title %}Gestion {% endblock %}
-
-{% block extra_css %}
-<style>
-    .custom-input {
-        background: white;
-        border: 2px solid #e5e7eb;
-        color: #1f2937;
-    }
-    .custom-input:focus {
-        border-color: #0000FF;
-        outline: none;
-    }
-    .custom-input::placeholder {
-        color: #9ca3af;
-    }
-</style>
-{% endblock %}
+{% block title %}Gestion & Discipline{% endblock %}
 
 {% block content %}
 <div class="animate-fade-in">
-    <div class="flex flex-col md:flex-row justify-between items-end mb-6 gap-4">
+    <header class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-4">
         <div>
-            <h1 class="text-4xl font-display font-bold text-pure-blue mb-2">Gestion des <span class="text-pure-green">Rapports</span></h1>
-            <p class="text-gray-600 uppercase tracking-widest text-xs">{% if nom_departement %}Département {{ nom_departement }}{% else %}Discipline et Santé Spirituelle{% endif %}</p>
+            <h1 class="text-3xl lg:text-4xl font-display font-bold text-pure-blue mb-2">Gestion <span class="text-pure-green">& Discipline</span></h1>
+            <p class="text-gray-600">Suivi des présences et rapports d'activités</p>
         </div>
-    </div>
+        <div class="flex flex-wrap gap-3 w-full lg:w-auto">
+            <button onclick="openModal('rapportModal')" class="flex-1 lg:flex-none px-6 py-3 blue-gradient text-white font-bold rounded-xl hover:shadow-lg transition-all text-sm whitespace-nowrap">
+                📝 Rapport Culte
+            </button>
+            <button onclick="openModal('presenceModal')" class="flex-1 lg:flex-none px-6 py-3 bg-white border-2 border-pure-blue text-pure-blue font-bold rounded-xl hover:bg-blue-50 transition-all text-sm whitespace-nowrap">
+                📍 Présence
+            </button>
+        </div>
+    </header>
 
-    <!-- Department Selector and Responsible Display -->
-    <div class="glass-card p-6 rounded-2xl mb-8 border-l-4 border-pure-blue">
-        <div class="flex justify-between items-center mb-4">
-            <h3 class="text-xl font-display font-bold text-pure-blue">{% if nom_departement %}Mon Département: {{ nom_departement }}{% else %}Responsable de Département{% endif %}</h3>
-            <div class="flex gap-2">
-                <a href="{% url 'ajout_membre' %}" class="bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-2 rounded-lg font-bold text-sm hover:shadow-lg transition-all flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
-                    </svg>
-                    Nouveau Membre
-                </a>
-                <a href="{% url 'liste_membres' %}" class="px-4 py-2 border-2 border-pure-green text-pure-green-dark rounded-lg font-bold text-sm hover:bg-green-50 transition-all">Mes Membres</a>
-                <a href="{% url 'liste_rapports_culte' %}" class="px-4 py-2 border-2 border-pure-blue text-pure-blue rounded-lg font-bold text-sm hover:bg-blue-50 transition-all">Mes Rapports</a>
+    <!-- Cartes d'action rapide -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div class="glass-card p-6 rounded-2xl hover:shadow-lg transition-all cursor-pointer" onclick="openModal('incidentModal')">
+            <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center text-red-600 mb-4">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
             </div>
+            <h3 class="font-bold text-lg text-gray-800 mb-2">Signaler un Incident</h3>
+            <p class="text-sm text-gray-500">Rapporter un cas de discipline ou un problème</p>
         </div>
-        {% if not nom_departement %}
-        <div class="flex flex-col md:flex-row items-center gap-4">
-            <div class="flex-1 max-w-xs">
-                <select id="departementSelectGestion" onchange="afficherResponsableGestion()" class="w-full p-3 rounded-lg custom-input text-sm">
-                    <option value="">-- Choisir un département --</option>
-                    <option value="ADA">ADA</option>
-                    <option value="ADN">ADN</option>
-                    <option value="CLASSE_BATEME">Classe de Batême</option>
-                    <option value="COMMUNICATION">Communication</option>
-                    <option value="ECODIM">ECODIM</option>
-                    <option value="EVANGELISATION">Evangelisation</option>
-                    <option value="GESTION_CULTE">Gestion de Culte</option>
-                    <option value="LOGISTIQUE">Logistique</option>
-                    <option value="MUSIQUE_LOUANGE">Musique et Louange</option>
-                    <option value="PORTIER">Portier</option>
-                    <option value="SAINTE_CENE">Sainte Cène</option>
-                </select>
-            </div>
-            
-            <!-- Responsible Display Card -->
-            <div id="responsableDisplayGestion" class="hidden flex-1 max-w-md">
-                <div class="bg-gradient-to-r from-blue-100 to-green-100 p-4 rounded-xl border-2 border-pure-blue">
-                    <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 rounded-full blue-gradient flex items-center justify-center">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                            </svg>
-                        </div>
-                        <div class="flex-1">
-                            <p id="responsableNameGestion" class="text-sm font-bold text-gray-800"></p>
-                            <p id="responsableContactGestion" class="text-xs text-pure-blue"></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Empty State -->
-            <div id="responsableEmptyGestion" class="hidden flex-1 max-w-md">
-                <div class="bg-gray-100 p-4 rounded-xl border-2 border-gray-300 text-center">
-                    <p class="text-gray-500 text-sm">Aucun responsable trouvé</p>
-                </div>
-            </div>
-        </div>
-        {% else %}
-        <!-- Affichage du département du responsable connecté -->
-        <div class="bg-gradient-to-r from-blue-100 to-green-100 p-4 rounded-xl border-2 border-pure-blue">
-            <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-full blue-gradient flex items-center justify-center">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                    </svg>
-                </div>
-                <div class="flex-1">
-                    <p class="text-sm font-bold text-gray-800">Département: {{ nom_departement }}</p>
-                    <p class="text-xs text-pure-blue">Vous gérez ce département</p>
-                </div>
-            </div>
-        </div>
-        {% endif %}
-    </div>
-
-    <!-- FORMULAIRE DE RAPPORT DE CULTE -->
-    <div class="glass-card rounded-2xl p-8 mb-10">
-        <h3 class="font-display font-bold text-2xl text-pure-blue mb-6 border-b-2 border-pure-blue/20 pb-4">Rapport de Culte</h3>
         
-        <form id="rapportForm" action="{% url 'soumission_rapport_culte' %}" method="POST" class="space-y-8">
+        <div class="glass-card p-6 rounded-2xl hover:shadow-lg transition-all cursor-pointer" onclick="openModal('santeModal')">
+            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-green-600 mb-4">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+            </div>
+            <h3 class="font-bold text-lg text-gray-800 mb-2">Santé Spirituelle</h3>
+            <p class="text-sm text-gray-500">Remplir la fiche de suivi spirituel mensuelle</p>
+        </div>
+
+        <div class="glass-card p-6 rounded-2xl hover:shadow-lg transition-all cursor-pointer" onclick="openModal('resumeModal')">
+            <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center text-purple-600 mb-4">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+            </div>
+            <h3 class="font-bold text-lg text-gray-800 mb-2">Transmission Résumé</h3>
+            <p class="text-sm text-gray-500">Suivi des résumés de culte des serviteurs</p>
+        </div>
+    </div>
+
+    <!-- Liste des Membres (Aperçu) -->
+    <div class="glass-card rounded-2xl overflow-hidden">
+        <div class="p-6 border-b border-gray-100">
+            <h3 class="font-bold text-xl text-pure-blue">Membres du Département</h3>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead class="bg-gray-50 text-gray-500 text-xs uppercase">
+                    <tr>
+                        <th class="p-4">Nom complet</th>
+                        <th class="p-4">Rôle</th>
+                        <th class="p-4">Statut</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    {% for membre in membres|slice:":5" %}
+                    <tr class="hover:bg-gray-50/50">
+                        <td class="p-4 font-semibold text-gray-800">{{ membre.nom_complet }}</td>
+                        <td class="p-4 text-sm">{{ membre.get_role_display }}</td>
+                        <td class="p-4">
+                            <span class="px-2 py-1 rounded-full text-xs font-bold {% if membre.status == 'ACTIF' %}bg-green-100 text-green-700{% else %}bg-gray-100 text-gray-600{% endif %}">
+                                {{ membre.get_status_display }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="p-4 bg-gray-50 text-center">
+            <a href="{% url 'liste_membres' %}" class="text-sm font-bold text-pure-blue hover:underline">Voir tous les membres →</a>
+        </div>
+    </div>
+</div>
+
+<!-- Modals -->
+<!-- Rapport Modal -->
+<div id="rapportModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+    <div class="glass-card w-full max-w-2xl p-6 rounded-2xl max-h-[90vh] overflow-y-auto bg-white">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-xl font-bold text-pure-blue">Nouveau Rapport de Culte</h3>
+            <button onclick="closeModal('rapportModal')" class="text-gray-500"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+        </div>
+        <form action="{% url 'soumission_rapport_culte' %}" method="POST" class="space-y-4">
             {% csrf_token %}
-            
-            <!-- Champs cachés -->
             <input type="hidden" name="nom_departement" value="{{ nom_departement }}">
             <input type="hidden" name="responsable" value="{{ user.profile.membre.id }}">
-            <input type="hidden" name="date_culte" id="date_culte_auto">
             
-            <script>
-                document.getElementById('date_culte_auto').value = new Date().toISOString().split('T')[0];
-            </script>
-
-            <!-- 1. Présence des serviteurs -->
-            <div class="bg-green-50 p-6 rounded-xl border-l-4 border-pure-green">
-                <h4 class="font-bold text-sm text-pure-green-dark uppercase tracking-widest mb-4">1. Présence des serviteurs lors des services au culte</h4>
-                
-                <!-- Prière avant 1er culte -->
-                <div class="mb-6">
-                    <h5 class="text-xs font-bold text-gray-800 mb-3">Prière avant 1er culte</h5>
-                    <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
-                        <div>
-                            <label class="block text-[10px] text-gray-500 mb-1">Activité</label>
-                            <select name="priere_1_activite" class="w-full p-2 rounded-lg custom-input text-xs">
-                                <option>Prière</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-[10px] text-gray-500 mb-1">Nbre Serviteur</label>
-                            <input type="number" name="priere_1_nbre" class="w-full p-2 rounded-lg custom-input text-xs" placeholder="0" value="0">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] text-gray-500 mb-1">Programmé</label>
-                            <input type="number" name="priere_1_programme" class="w-full p-2 rounded-lg custom-input text-xs" placeholder="0" value="0">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] text-gray-500 mb-1">Absent</label>
-                            <input type="number" name="priere_1_absent" class="w-full p-2 rounded-lg custom-input text-xs" placeholder="0" value="0">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] text-gray-500 mb-1">Nom & Motif</label>
-                            <input type="text" name="priere_1_motifs" class="w-full p-2 rounded-lg custom-input text-xs" placeholder="Nom - Motif">
-                        </div>
-                    </div>
+            <div>
+                <label class="block text-sm font-semibold mb-1">Date du culte</label>
+                <input type="date" name="date_culte" class="w-full p-3 rounded-lg border focus:border-pure-blue outline-none" required>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="p-4 bg-gray-50 rounded-lg">
+                    <p class="font-bold mb-2">1er Culte</p>
+                    <input type="number" name="culte_1_nbre" placeholder="Présents" class="w-full mb-2 p-2 border rounded">
+                    <input type="number" name="culte_1_programme" placeholder="Programmés" class="w-full p-2 border rounded">
                 </div>
-
-                <!-- 1er Culte -->
-                <div class="mb-6">
-                    <h5 class="text-xs font-bold text-gray-800 mb-3">1er Culte</h5>
-                    <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
-                        <div>
-                            <label class="block text-[10px] text-gray-500 mb-1">Activité</label>
-                            <select name="culte_1_activite" class="w-full p-2 rounded-lg custom-input text-xs">
-                                <option>Culte</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-[10px] text-gray-500 mb-1">Nbre Serviteur</label>
-                            <input type="number" name="culte_1_nbre" class="w-full p-2 rounded-lg custom-input text-xs" placeholder="0" value="0">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] text-gray-500 mb-1">Programmé</label>
-                            <input type="number" name="culte_1_programme" class="w-full p-2 rounded-lg custom-input text-xs" placeholder="0" value="0">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] text-gray-500 mb-1">Absent</label>
-                            <input type="number" name="culte_1_absent" class="w-full p-2 rounded-lg custom-input text-xs" placeholder="0" value="0">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] text-gray-500 mb-1">Nom & Motif</label>
-                            <input type="text" name="culte_1_motifs" class="w-full p-2 rounded-lg custom-input text-xs" placeholder="Nom - Motif">
-                        </div>
-                    </div>
+                <div class="p-4 bg-gray-50 rounded-lg">
+                    <p class="font-bold mb-2">2ème Culte</p>
+                    <input type="number" name="culte_2_nbre" placeholder="Présents" class="w-full mb-2 p-2 border rounded">
+                    <input type="number" name="culte_2_programme" placeholder="Programmés" class="w-full p-2 border rounded">
                 </div>
-
-                <!-- Prière avant 2ème culte -->
-                <div class="mb-6">
-                    <h5 class="text-xs font-bold text-gray-800 mb-3">Prière avant 2ème culte</h5>
-                    <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
-                        <div>
-                            <label class="block text-[10px] text-gray-500 mb-1">Activité</label>
-                            <select name="priere_2_activite" class="w-full p-2 rounded-lg custom-input text-xs">
-                                <option>Prière</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-[10px] text-gray-500 mb-1">Nbre Serviteur</label>
-                            <input type="number" name="priere_2_nbre" class="w-full p-2 rounded-lg custom-input text-xs" placeholder="0" value="0">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] text-gray-500 mb-1">Programmé</label>
-                            <input type="number" name="priere_2_programme" class="w-full p-2 rounded-lg custom-input text-xs" placeholder="0" value="0">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] text-gray-500 mb-1">Absent</label>
-                            <input type="number" name="priere_2_absent" class="w-full p-2 rounded-lg custom-input text-xs" placeholder="0" value="0">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] text-gray-500 mb-1">Nom & Motif</label>
-                            <input type="text" name="priere_2_motifs" class="w-full p-2 rounded-lg custom-input text-xs" placeholder="Nom - Motif">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 2ème Culte -->
-                <div class="mb-6">
-                    <h5 class="text-xs font-bold text-gray-800 mb-3">2ème Culte</h5>
-                    <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
-                        <div>
-                            <label class="block text-[10px] text-gray-500 mb-1">Activité</label>
-                            <select name="culte_2_activite" class="w-full p-2 rounded-lg custom-input text-xs">
-                                <option>Culte</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-[10px] text-gray-500 mb-1">Nbre Serviteur</label>
-                            <input type="number" name="culte_2_nbre" class="w-full p-2 rounded-lg custom-input text-xs" placeholder="0" value="0">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] text-gray-500 mb-1">Programmé</label>
-                            <input type="number" name="culte_2_programme" class="w-full p-2 rounded-lg custom-input text-xs" placeholder="0" value="0">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] text-gray-500 mb-1">Absent</label>
-                            <input type="number" name="culte_2_absent" class="w-full p-2 rounded-lg custom-input text-xs" placeholder="0" value="0">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] text-gray-500 mb-1">Nom & Motif</label>
-                            <input type="text" name="culte_2_motifs" class="w-full p-2 rounded-lg custom-input text-xs" placeholder="Nom - Motif">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Culte des Boss -->
-                <div class="mb-6">
-                    <h5 class="text-xs font-bold text-gray-800 mb-3">Culte des Boss</h5>
-                    <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
-                        <div>
-                            <label class="block text-[10px] text-gray-500 mb-1">Activité</label>
-                            <select name="culte_boss_activite" class="w-full p-2 rounded-lg custom-input text-xs">
-                                <option>Culte des Boss</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-[10px] text-gray-500 mb-1">Nbre Serviteur</label>
-                            <input type="number" name="culte_boss_nbre" class="w-full p-2 rounded-lg custom-input text-xs" placeholder="0" value="0">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] text-gray-500 mb-1">Programmé</label>
-                            <input type="number" name="culte_boss_programme" class="w-full p-2 rounded-lg custom-input text-xs" placeholder="0" value="0">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] text-gray-500 mb-1">Absent</label>
-                            <input type="number" name="culte_boss_absent" class="w-full p-2 rounded-lg custom-input text-xs" placeholder="0" value="0">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] text-gray-500 mb-1">Nom & Motif</label>
-                            <input type="text" name="culte_boss_motifs" class="w-full p-2 rounded-lg custom-input text-xs" placeholder="Nom - Motif">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Réveil Sentinelles -->
-                <div class="mb-2">
-                    <h5 class="text-xs font-bold text-gray-800 mb-3">Réveil Sentinelles (Lundi 5h)</h5>
-                    <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
-                        <div>
-                            <label class="block text-[10px] text-gray-500 mb-1">Activité</label>
-                            <select name="reveil_sentinelles_activite" class="w-full p-2 rounded-lg custom-input text-xs">
-                                <option>Prière</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-[10px] text-gray-500 mb-1">Nbre Serviteur</label>
-                            <input type="number" name="reveil_sentinelles_nbre" class="w-full p-2 rounded-lg custom-input text-xs" placeholder="0" value="0">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] text-gray-500 mb-1">Programmé</label>
-                            <input type="number" name="reveil_sentinelles_programme" class="w-full p-2 rounded-lg custom-input text-xs" placeholder="0" value="0">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] text-gray-500 mb-1">Absent</label>
-                            <input type="number" name="reveil_sentinelles_absent" class="w-full p-2 rounded-lg custom-input text-xs" placeholder="0" value="0">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] text-gray-500 mb-1">Nom & Motif</label>
-                            <input type="text" name="reveil_sentinelles_motifs" class="w-full p-2 rounded-lg custom-input text-xs" placeholder="Nom - Motif">
-                        </div>
-                    </div>
+                <div class="p-4 bg-gray-50 rounded-lg">
+                    <p class="font-bold mb-2">Culte des Boss</p>
+                    <input type="number" name="culte_boss_nbre" placeholder="Présents" class="w-full mb-2 p-2 border rounded">
+                    <input type="number" name="culte_boss_programme" placeholder="Programmés" class="w-full p-2 border rounded">
                 </div>
             </div>
-
-            <!-- 2. Observations générales -->
-            <div class="bg-blue-50 p-6 rounded-xl border-l-4 border-pure-blue">
-                <h4 class="font-bold text-sm text-pure-blue uppercase tracking-widest mb-4">2. Observations générales et recommandations</h4>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                        <label class="block text-xs text-gray-700 font-semibold mb-2">Points forts constatés</label>
-                        <textarea name="points_forts" rows="4" class="w-full p-3 rounded-lg custom-input text-sm" placeholder="Décrivez les points forts..."></textarea>
-                    </div>
-                    <div>
-                        <label class="block text-xs text-gray-700 font-semibold mb-2">Difficultés observées</label>
-                        <textarea name="difficultes" rows="4" class="w-full p-3 rounded-lg custom-input text-sm" placeholder="Décrivez les difficultés..."></textarea>
-                    </div>
-                    <div>
-                        <label class="block text-xs text-gray-700 font-semibold mb-2">Recommandations</label>
-                        <textarea name="recommandations" rows="4" class="w-full p-3 rounded-lg custom-input text-sm" placeholder="Vos recommandations..."></textarea>
-                    </div>
-                </div>
+            
+            <div>
+                <label class="block text-sm font-semibold mb-1">Points forts</label>
+                <textarea name="points_forts" rows="2" class="w-full p-3 rounded-lg border focus:border-pure-blue outline-none"></textarea>
             </div>
-
-            <!-- 3. Transmission du résumé du culte -->
-            <div class="bg-purple-50 p-6 rounded-xl border-l-4 border-purple-500">
-                <h4 class="font-bold text-sm text-purple-700 uppercase tracking-widest mb-4">3. Transmission du résumé du culte</h4>
-                <p class="text-xs text-gray-600 mb-4">Indiquez le nombre de résumés transmis pour chaque culte</p>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                        <label class="block text-xs text-gray-700 font-semibold mb-2">1er Culte - Nombre de résumés transmis</label>
-                        <input type="number" name="transmission_culte_1" class="w-full p-3 rounded-lg custom-input text-sm" placeholder="0" value="0" min="0">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-gray-700 font-semibold mb-2">2ème Culte - Nombre de résumés transmis</label>
-                        <input type="number" name="transmission_culte_2" class="w-full p-3 rounded-lg custom-input text-sm" placeholder="0" value="0" min="0">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-gray-700 font-semibold mb-2">Culte des Boss - Nombre de résumés transmis</label>
-                        <input type="number" name="transmission_culte_boss" class="w-full p-3 rounded-lg custom-input text-sm" placeholder="0" value="0" min="0">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Boutons -->
-            <div class="flex gap-4 justify-end">
-                <button type="button" onclick="document.getElementById('rapportForm').reset()" class="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg font-bold text-sm hover:bg-gray-100 transition-all">ANNULER</button>
-                <button type="submit" class="px-8 py-3 blue-gradient text-white font-bold rounded-lg text-sm hover:shadow-lg transition-all">ENREGISTRER LE RAPPORT</button>
-            </div>
+            
+            <button type="submit" class="w-full py-3 blue-gradient text-white font-bold rounded-lg hover:shadow-lg transition-all">Soumettre le Rapport</button>
         </form>
     </div>
-
-
-
 </div>
-{% endblock %}
 
-{% block extra_js %}
 <script>
-    // Function to display department responsible (GESTION section)
-    function afficherResponsableGestion() {
-        const select = document.getElementById('departementSelectGestion');
-        const display = document.getElementById('responsableDisplayGestion');
-        const empty = document.getElementById('responsableEmptyGestion');
-        const nameSpan = document.getElementById('responsableNameGestion');
-        const contactSpan = document.getElementById('responsableContactGestion');
-        const departement = select.value;
-
-        if (!departement) {
-            display.classList.add('hidden');
-            empty.classList.add('hidden');
-            return;
-        }
-
-        // Show loading state
-        nameSpan.textContent = 'Chargement...';
-        contactSpan.textContent = '';
-        display.classList.remove('hidden');
-        empty.classList.add('hidden');
-
-        // Fetch responsible from API
-        fetch(`/api/responsable-departement/?departement=${encodeURIComponent(departement)}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.success && data.responsable) {
-                    nameSpan.textContent = data.responsable.nom_complet;
-                    
-                    // Build contact info
-                    let contactInfo = '';
-                    if (data.responsable.telephone) {
-                        contactInfo += '📞 ' + data.responsable.telephone;
-                    }
-                    if (data.responsable.email) {
-                        contactInfo += contactInfo ? ' | ✉️ ' + data.responsable.email : '✉️ ' + data.responsable.email;
-                    }
-                    contactSpan.textContent = contactInfo || 'Aucune information de contact';
-                    
-                    display.classList.remove('hidden');
-                    empty.classList.add('hidden');
-                } else {
-                    display.classList.add('hidden');
-                    empty.classList.remove('hidden');
-                }
-            })
-            .catch(error => {
-                nameSpan.textContent = 'Erreur';
-                contactSpan.textContent = '';
-            });
+    function openModal(modalId) { document.getElementById(modalId).classList.remove('hidden'); }
+    function closeModal(modalId) { document.getElementById(modalId).classList.add('hidden'); }
+    window.onclick = function(event) {
+        if (event.target.classList.contains('fixed')) { event.target.classList.add('hidden'); }
     }
-
-    // Setup form submission handlers
-    document.addEventListener('DOMContentLoaded', function() {
-        setupAjaxForm('rapportForm', 'ENREGISTRER LE RAPPORT');
-    });
 </script>
 {% endblock %}
-
