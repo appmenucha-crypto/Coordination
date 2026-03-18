@@ -10,7 +10,7 @@
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
             </button>
             <div>
-                <h1 class="text-3xl md:text-4xl font-display font-bold text-pure-blue mb-2">Finances <span class="text-pure-green">{{ nom_departement }}</span></h1>
+                <h1 class="text-3xl md:text-4xl font-display font-bold text-depart-green mb-2">Finances <span class="text-depart-gold">{{ nom_departement }}</span></h1>
                 <p class="text-gray-600">Gestion des ressources financières du département</p>
             </div>
         </div>
@@ -25,42 +25,42 @@
     {% endif %}
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div class="glass-card p-6 rounded-2xl border-l-4 border-pure-green hover:shadow-xl transition-all">
+        <div class="glass-card p-6 rounded-2xl border-l-4 border-depart-green hover:shadow-xl transition-all">
             <p class="text-gray-600 text-xs uppercase font-semibold">Total Entrées</p>
-            <p class="text-4xl font-black text-pure-green-dark mt-2">{{ total_entrees|default:"0" }} <span class="text-lg">CFA</span></p>
+            <p class="text-4xl font-black text-depart-green mt-2">{{ total_entrees|default:"0" }} <span class="text-lg">CFA</span></p>
         </div>
         <div class="glass-card p-6 rounded-2xl border-l-4 border-red-500 hover:shadow-xl transition-all">
             <p class="text-gray-600 text-xs uppercase font-semibold">Total Dépenses</p>
             <p class="text-4xl font-black text-red-600 mt-2">{{ total_sorties|default:"0" }} <span class="text-lg">CFA</span></p>
         </div>
-        <div class="glass-card p-6 rounded-2xl border-l-4 border-pure-blue hover:shadow-xl transition-all">
+        <div class="glass-card p-6 rounded-2xl border-l-4 border-depart-gold hover:shadow-xl transition-all">
             <p class="text-gray-600 text-xs uppercase font-semibold">Solde Net</p>
-            <p class="text-4xl font-black text-pure-blue mt-2">{{ solde|default:"0" }} <span class="text-lg">CFA</span></p>
+            <p class="text-4xl font-black text-depart-gold mt-2">{{ solde|default:"0" }} <span class="text-lg">CFA</span></p>
         </div>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div class="lg:col-span-2 glass-card rounded-2xl p-6">
-            <h3 class="font-bold text-xl mb-6 flex items-center gap-2 text-pure-blue">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+            <h3 class="font-bold text-xl mb-6 flex items-center gap-2 text-depart-green">
+                <svg class="w-6 h-6 text-depart-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
                 Historique des Transactions
             </h3>
             <div class="space-y-4">
                 {% for transaction in transactions_recents %}
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-blue-50 rounded-xl hover:bg-blue-100 transition-colors gap-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-depart-green/5 rounded-xl hover:bg-depart-green/10 transition-colors gap-4">
                     <div class="flex items-center gap-4 w-full">
-                        <div class="w-12 h-12 rounded-full {% if transaction.type_mouvement == 'ENTREE' %}bg-green-100{% else %}bg-red-100{% endif %} flex items-center justify-center {% if transaction.type_mouvement == 'ENTREE' %}text-green-700{% else %}text-red-700{% endif %} font-bold text-sm">
+                        <div class="w-12 h-12 rounded-full {% if transaction.type_mouvement == 'ENTREE' %}bg-depart-green/20{% else %}bg-red-100{% endif %} flex items-center justify-center {% if transaction.type_mouvement == 'ENTREE' %}text-depart-green{% else %}text-red-700{% endif %} font-bold text-sm">
                             {% if transaction.type_mouvement == 'ENTREE' %}IN{% else %}OUT{% endif %}
                         </div>
                         <div class="overflow-hidden">
                             <p class="font-bold text-sm text-gray-800 truncate">{{ transaction.description }}</p>
                             <p class="text-xs text-gray-500 uppercase">{{ transaction.date_transaction }} • {{ transaction.get_categorie_display|default:transaction.categorie }}</p>
                             {% if transaction.membre %}
-                            <p class="text-xs text-pure-blue font-semibold">{{ transaction.membre.prenom }} {{ transaction.membre.nom }}</p>
+                            <p class="text-xs text-depart-green font-semibold">{{ transaction.membre.prenom }} {{ transaction.membre.nom }}</p>
                             {% endif %}
                         </div>
                     </div>
-                    <span class="font-mono {% if transaction.type_mouvement == 'ENTREE' %}text-green-700{% else %}text-red-700{% endif %} font-bold">
+                    <span class="font-mono {% if transaction.type_mouvement == 'ENTREE' %}text-depart-green{% else %}text-red-700{% endif %} font-bold">
                         {% if transaction.type_mouvement == 'ENTREE' %}+{% else %}-{% endif %}{{ transaction.montant }} CFA
                     </span>
                 </div>

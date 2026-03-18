@@ -6,15 +6,15 @@
 <div class="animate-fade-in">
     <div class="flex items-center gap-4 mb-10">
         <button onclick="toggleSidebar()" class="lg:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 focus:outline-none">
-            <svg class="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            <svg class="w-6 h-6 text-depart-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
         </button>
-        <h2 class="text-3xl lg:text-4xl font-display font-bold text-gold">COMMUNION FRATERNELLE</h2>
+        <h2 class="text-3xl lg:text-4xl font-display font-bold text-depart-green">COMMUNION <span class="text-depart-gold">FRATERNELLE</span></h2>
     </div>
     
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div class="lg:col-span-1 space-y-6">
-            <div class="glass-card p-6 rounded-2xl border-t-4 border-gold">
-                <h3 class="font-bold text-base uppercase tracking-widest mb-6 text-gold">Intégration Stagiaire</h3>
+            <div class="glass-card p-6 rounded-2xl border-t-4 border-depart-gold">
+                <h3 class="font-bold text-base uppercase tracking-widest mb-6 text-depart-green">Intégration Stagiaire</h3>
                 <form action="{% url 'ajout_stagiaire' %}" method="POST" class="space-y-4" id="stagiaireForm">
                     {% csrf_token %}
                     <input type="text" name="nom" placeholder="Nom" class="w-full p-3 rounded-lg custom-input text-sm" required>
@@ -23,16 +23,16 @@
                     <input type="tel" name="telephone" placeholder="Téléphone" class="w-full p-3 rounded-lg custom-input text-sm" required>
                     <input type="date" name="date_naissance" placeholder="Date de naissance" class="w-full p-3 rounded-lg custom-input text-sm" required>
                     <input type="date" name="date_debut" placeholder="Date de début" class="w-full p-3 rounded-lg custom-input text-sm" required>
-                    <button type="submit" class="w-full mt-4 py-3 border-2 border-gold text-gold text-sm font-bold rounded-lg hover:bg-gold hover:text-black transition-all">AJOUTER STAGIAIRE</button>
+                    <button type="submit" class="w-full mt-4 py-3 bg-depart-green text-white text-sm font-bold rounded-lg hover:bg-depart-green-dark transition-all">AJOUTER STAGIAIRE</button>
                 </form>
             </div>
             
-            <div class="glass-card p-6 rounded-2xl border-t-4 border-gold">
-                <h3 class="font-bold text-base uppercase tracking-widest mb-6 text-gold">Nouvel Événement</h3>
+            <div class="glass-card p-6 rounded-2xl border-t-4 border-depart-gold">
+                <h3 class="font-bold text-base uppercase tracking-widest mb-6 text-depart-green">Nouvel Événement</h3>
                 <form action="{% url 'ajout_evenement' %}" method="POST" class="space-y-3" id="evenementForm">
                     {% csrf_token %}
                     <div>
-                        <label class="block text-gold text-[10px] font-bold mb-1">Type</label>
+                        <label class="block text-gray-500 text-[10px] font-bold mb-1">Type</label>
                         <select name="type_evenement" class="w-full p-2 rounded-lg custom-input text-xs">
                             <option value="AGAPE">Agape/Partage</option>
                             <option value="VISITE">Visite</option>
@@ -44,25 +44,25 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-gold text-[10px] font-bold mb-1">Titre *</label>
+                        <label class="block text-gray-500 text-[10px] font-bold mb-1">Titre *</label>
                         <input type="text" name="titre" placeholder="Titre" class="w-full p-2 rounded-lg custom-input text-xs" required>
                     </div>
                     <div class="grid grid-cols-2 gap-2">
                         <div>
-                            <label class="block text-gold text-[10px] font-bold mb-1">Date *</label>
+                            <label class="block text-gray-500 text-[10px] font-bold mb-1">Date *</label>
                             <input type="date" name="date_evenement" class="w-full p-2 rounded-lg custom-input text-xs" required>
                         </div>
                         <div>
-                            <label class="block text-gold text-[10px] font-bold mb-1">Heure</label>
+                            <label class="block text-gray-500 text-[10px] font-bold mb-1">Heure</label>
                             <input type="time" name="heure" class="w-full p-2 rounded-lg custom-input text-xs">
                         </div>
                     </div>
                     <div>
-                        <label class="block text-gold text-[10px] font-bold mb-1">Lieu</label>
+                        <label class="block text-gray-500 text-[10px] font-bold mb-1">Lieu</label>
                         <input type="text" name="lieu" placeholder="Lieu" class="w-full p-2 rounded-lg custom-input text-xs">
                     </div>
                     <div>
-                        <label class="block text-gold text-[10px] font-bold mb-1">Description</label>
+                        <label class="block text-gray-500 text-[10px] font-bold mb-1">Description</label>
                         <textarea name="description" placeholder="Description" rows="2" class="w-full p-2 rounded-lg custom-input text-xs"></textarea>
                     </div>
                     <div class="grid grid-cols-2 gap-2">
@@ -75,31 +75,31 @@
                             <input type="number" name="montant_depense" placeholder="0" class="w-full p-2 rounded-lg custom-input text-xs" value="0">
                         </div>
                     </div>
-                    <button type="submit" class="w-full py-2 bg-gold text-deep-black text-xs font-bold rounded-lg hover:bg-yellow-500 transition-all">CRÉER</button>
+                    <button type="submit" class="w-full py-2 bg-depart-gold text-white text-xs font-bold rounded-lg hover:bg-depart-gold-light transition-all">CRÉER</button>
                 </form>
             </div>
         </div>
 
         <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Stagiaires -->
-            <div class="glass-card p-6 rounded-2xl">
+            <div class="glass-card p-6 rounded-2xl border-l-4 border-depart-green">
                 <div class="flex justify-between items-center mb-6">
-                    <h3 class="font-bold text-xl text-white">Stagiaires</h3>
-                    <span class="px-3 py-2 bg-gold/20 text-gold text-sm font-bold rounded-full">{{ stagaires|length }}</span>
+                    <h3 class="font-bold text-xl text-depart-green">Stagiaires</h3>
+                    <span class="px-3 py-2 bg-depart-green/10 text-depart-green text-sm font-bold rounded-full">{{ stagaires|length }}</span>
                 </div>
                 <div class="space-y-3 max-h-[700px] overflow-y-auto pr-2">
                     {% for stagaire in stagaires %}
-                    <div class="flex items-start gap-4 p-4 bg-white/5 rounded-xl border-l-4 border-gold hover:bg-white/10 transition-all">
-                        <div class="w-14 h-14 rounded-full bg-violet-spiritual/20 flex items-center justify-center text-violet-spiritual font-bold text-base border-2 border-violet-spiritual/50 flex-shrink-0">
+                    <div class="flex items-start gap-4 p-4 bg-depart-green/5 rounded-xl hover:bg-depart-green/10 transition-all">
+                        <div class="w-14 h-14 rounded-full bg-depart-green/20 flex items-center justify-center text-depart-green font-bold text-base border-2 border-depart-green/50 flex-shrink-0">
                             {{ stagaire.prenom.0 }}{{ stagaire.nom.0 }}
                         </div>
                         <div class="flex-1 overflow-hidden">
-                            <p class="text-base font-bold text-white whitespace-normal">{{ stagaire.prenom }} {{ stagaire.nom }}</p>
-                            <p class="text-sm text-gray-400 mt-1">{{ stagaire.departement_accueil }}</p>
-                            <p class="text-xs text-gold mt-1">{{ stagaire.date_debut }}</p>
+                            <p class="text-base font-bold text-gray-800 whitespace-normal">{{ stagaire.prenom }} {{ stagaire.nom }}</p>
+                            <p class="text-sm text-gray-500 mt-1">{{ stagaire.departement_accueil }}</p>
+                            <p class="text-xs text-depart-gold mt-1">{{ stagaire.date_debut }}</p>
                             <form method="POST" action="{% url 'modifier_statut_stagiaire' stagaire.id %}" class="mt-2">
                                 {% csrf_token %}
-                                <select name="statut" onchange="this.form.submit()" class="text-sm px-4 py-2 rounded-lg bg-gray-700 border-2 border-gold text-white hover:border-yellow-500 transition-all cursor-pointer font-bold">
+                                <select name="statut" onchange="this.form.submit()" class="text-sm px-4 py-2 rounded-lg bg-white border border-depart-gold text-gray-700 hover:border-depart-green transition-all cursor-pointer font-bold">
                                     <option value="EN_COURS" {% if stagaire.statut == 'EN_COURS' %}selected{% endif %}>✓ En cours</option>
                                     <option value="TERMINE" {% if stagaire.statut == 'TERMINE' %}selected{% endif %}>✓ Terminé</option>
                                     <option value="ABANDON" {% if stagaire.statut == 'ABANDON' %}selected{% endif %}>✗ Abandonné</option>
@@ -115,21 +115,21 @@
             </div>
 
             <!-- Liste des événements -->
-            <div class="glass-card p-6 rounded-2xl bg-gradient-to-br from-card-bg to-[#2a2a2a]">
-                <h3 class="font-bold text-xl text-gold mb-4">Liste des événements</h3>
+            <div class="glass-card p-6 rounded-2xl border-l-4 border-depart-gold">
+                <h3 class="font-bold text-xl text-depart-gold mb-4">Liste des événements</h3>
                 <div class="space-y-3 max-h-[600px] overflow-y-auto">
                     {% for evenement in evenements_a_venir %}
-                    <div class="flex items-start gap-3 p-3 bg-white/5 rounded-xl border-l-4 border-gold hover:bg-white/10 transition-all">
-                        <div class="p-2 bg-gold/10 rounded-lg text-gold font-bold text-xs text-center min-w-[45px] border-2 border-gold/30">
+                    <div class="flex items-start gap-3 p-3 bg-depart-gold/5 rounded-xl hover:bg-depart-gold/10 transition-all">
+                        <div class="p-2 bg-depart-gold/10 rounded-lg text-depart-gold font-bold text-xs text-center min-w-[45px] border border-depart-gold/30">
                             <span class="block text-lg">{{ evenement.date_evenement|date:"d" }}</span>
                             <span class="block text-[9px] uppercase">{{ evenement.date_evenement|date:"M" }}</span>
                         </div>
                         <div class="flex-1">
-                            <p class="text-sm font-bold text-white">{{ evenement.titre }}</p>
-                            <p class="text-xs text-gray-400">{{ evenement.get_type_evenement_display }}</p>
-                            {% if evenement.heure %}<p class="text-xs text-gold mt-1">⏰ {{ evenement.heure }}</p>{% endif %}
+                            <p class="text-sm font-bold text-gray-800">{{ evenement.titre }}</p>
+                            <p class="text-xs text-gray-500">{{ evenement.get_type_evenement_display }}</p>
+                            {% if evenement.heure %}<p class="text-xs text-depart-green mt-1">⏰ {{ evenement.heure }}</p>{% endif %}
                             {% if evenement.lieu %}<p class="text-xs text-gray-500 mt-1">📍 {{ evenement.lieu }}</p>{% endif %}
-                            {% if evenement.description %}<p class="text-xs text-gray-400 mt-1">{{ evenement.description|truncatewords:10 }}</p>{% endif %}
+                            {% if evenement.description %}<p class="text-xs text-gray-500 mt-1">{{ evenement.description|truncatewords:10 }}</p>{% endif %}
                             <div class="flex gap-3 mt-2 text-[10px]">
                                 <span class="text-green-400">💰 {{ evenement.montant_collecte }} CFA</span>
                                 <span class="text-red-400">💸 {{ evenement.montant_depense }} CFA</span>

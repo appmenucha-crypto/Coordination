@@ -10,15 +10,15 @@
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
             </button>
             <div>
-                <h1 class="text-3xl lg:text-4xl font-display font-bold text-[#D2AF1F] mb-2">Gestion <span class="text-pure-green">& Discipline</span></h1>
+                <h1 class="text-3xl lg:text-4xl font-display font-bold text-depart-green mb-2">Gestion <span class="text-depart-gold">& Discipline</span></h1>
                 <p class="text-gray-600">Suivi des présences et rapports d'activités</p>
             </div>
         </div>
         <div class="flex flex-wrap gap-3 w-full lg:w-auto">
-            <button onclick="openModal('rapportModal')" class="flex-1 lg:flex-none px-6 py-3 bg-[#D2AF1F] hover:bg-[#B8961C] text-white font-bold rounded-xl hover:shadow-lg transition-all text-sm whitespace-nowrap">
+            <button onclick="openModal('rapportModal')" class="flex-1 lg:flex-none px-6 py-3 bg-depart-green hover:bg-depart-green-dark text-white font-bold rounded-xl hover:shadow-lg transition-all text-sm whitespace-nowrap">
                 📝 Rapport Culte
             </button>
-            <button onclick="openModal('presenceModal')" class="flex-1 lg:flex-none px-6 py-3 bg-white border-2 border-[#D2AF1F] text-[#D2AF1F] font-bold rounded-xl hover:bg-yellow-50 transition-all text-sm whitespace-nowrap">
+            <button onclick="openModal('presenceModal')" class="flex-1 lg:flex-none px-6 py-3 bg-white border-2 border-depart-gold text-depart-gold font-bold rounded-xl hover:bg-yellow-50 transition-all text-sm whitespace-nowrap">
                 📍 Présence
             </button>
         </div>
@@ -35,7 +35,7 @@
         </a>
         
         <div class="glass-card p-6 rounded-2xl hover:shadow-lg transition-all cursor-pointer" onclick="openModal('santeModal')">
-            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-green-600 mb-4">
+            <div class="w-12 h-12 bg-depart-green/10 rounded-full flex items-center justify-center text-depart-green mb-4">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
             </div>
             <h3 class="font-bold text-lg text-gray-800 mb-2">Santé Spirituelle</h3>
@@ -43,7 +43,7 @@
         </div>
 
         <div class="glass-card p-6 rounded-2xl hover:shadow-lg transition-all cursor-pointer" onclick="openModal('resumeModal')">
-            <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center text-purple-600 mb-4">
+            <div class="w-12 h-12 bg-depart-gold/10 rounded-full flex items-center justify-center text-depart-gold mb-4">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
             </div>
             <h3 class="font-bold text-lg text-gray-800 mb-2">Transmission Résumé</h3>
@@ -54,7 +54,7 @@
     <!-- Liste des Membres (Aperçu) -->
     <div class="glass-card rounded-2xl overflow-hidden">
         <div class="p-6 border-b border-gray-100">
-            <h3 class="font-bold text-xl text-pure-blue">Membres du Département</h3>
+            <h3 class="font-bold text-xl text-depart-green">Membres du Département</h3>
         </div>
         <div class="overflow-x-auto">
             <table class="w-full text-left">
@@ -81,7 +81,7 @@
             </table>
         </div>
         <div class="p-4 bg-gray-50 text-center">
-            <a href="{% url 'liste_membres' %}" class="text-sm font-bold text-pure-blue hover:underline">Voir tous les membres →</a>
+            <a href="{% url 'liste_membres' %}" class="text-sm font-bold text-depart-green hover:underline">Voir tous les membres →</a>
         </div>
     </div>
 </div>
@@ -92,8 +92,8 @@
     <div class="glass-card w-full max-w-5xl p-6 rounded-2xl max-h-[90vh] overflow-y-auto bg-white">
         <div class="flex justify-between items-center mb-6 border-b pb-4">
             <div>
-                <h3 class="text-2xl font-bold text-[#D2AF1F]">Rapport de Culte</h3>
-                <p class="text-gray-500">Département: <span class="font-semibold text-pure-green">{{ nom_departement }}</span></p>
+                <h3 class="text-2xl font-bold text-depart-green">Rapport de Culte</h3>
+                <p class="text-gray-500">Département: <span class="font-semibold text-depart-gold">{{ nom_departement }}</span></p>
             </div>
             <button onclick="closeModal('rapportModal')" class="text-gray-500 hover:text-red-500 transition-colors">
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -107,71 +107,71 @@
             
             <div>
                 <label class="block text-sm font-bold text-gray-700 mb-2">Date du culte *</label>
-                <input type="date" name="date_culte" class="w-full md:w-1/3 p-3 rounded-lg border-2 border-gray-300 focus:border-[#D2AF1F] focus:outline-none" required>
+                <input type="date" name="date_culte" class="w-full md:w-1/3 p-3 rounded-lg border-2 border-gray-300 focus:border-depart-green focus:outline-none" required>
             </div>
             
             <!-- 1. Présence des serviteurs -->
             <div>
-                <h4 class="text-xl font-bold text-[#D2AF1F] mb-4 border-l-4 border-[#D2AF1F] pl-3">1. Présence des serviteurs</h4>
+                <h4 class="text-xl font-bold text-depart-green mb-4 border-l-4 border-depart-gold pl-3">1. Présence des serviteurs</h4>
                 <div class="space-y-4">
                     <!-- Prière 1 -->
                     <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
                         <h5 class="font-bold text-gray-800 mb-3">Prière avant 1er culte</h5>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                            <input type="number" name="priere_1_nbre" placeholder="Nbre Serviteur" class="w-full p-2 rounded border focus:border-[#D2AF1F] outline-none">
-                            <input type="number" name="priere_1_programme" placeholder="Programmé" class="w-full p-2 rounded border focus:border-[#D2AF1F] outline-none">
-                            <input type="number" name="priere_1_absent" placeholder="Absent" class="w-full p-2 rounded border focus:border-[#D2AF1F] outline-none">
-                            <input type="text" name="priere_1_motifs" placeholder="Nom & Motif" class="w-full p-2 rounded border focus:border-[#D2AF1F] outline-none">
+                            <input type="number" name="priere_1_nbre" placeholder="Nbre Serviteur" class="w-full p-2 rounded border focus:border-depart-green outline-none">
+                            <input type="number" name="priere_1_programme" placeholder="Programmé" class="w-full p-2 rounded border focus:border-depart-green outline-none">
+                            <input type="number" name="priere_1_absent" placeholder="Absent" class="w-full p-2 rounded border focus:border-depart-green outline-none">
+                            <input type="text" name="priere_1_motifs" placeholder="Nom & Motif" class="w-full p-2 rounded border focus:border-depart-green outline-none">
                         </div>
                     </div>
                     <!-- 1er Culte -->
                     <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
                         <h5 class="font-bold text-gray-800 mb-3">1er Culte</h5>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                            <input type="number" name="culte_1_nbre" placeholder="Nbre Serviteur" class="w-full p-2 rounded border focus:border-[#D2AF1F] outline-none">
-                            <input type="number" name="culte_1_programme" placeholder="Programmé" class="w-full p-2 rounded border focus:border-[#D2AF1F] outline-none">
-                            <input type="number" name="culte_1_absent" placeholder="Absent" class="w-full p-2 rounded border focus:border-[#D2AF1F] outline-none">
-                            <input type="text" name="culte_1_motifs" placeholder="Nom & Motif" class="w-full p-2 rounded border focus:border-[#D2AF1F] outline-none">
+                            <input type="number" name="culte_1_nbre" placeholder="Nbre Serviteur" class="w-full p-2 rounded border focus:border-depart-green outline-none">
+                            <input type="number" name="culte_1_programme" placeholder="Programmé" class="w-full p-2 rounded border focus:border-depart-green outline-none">
+                            <input type="number" name="culte_1_absent" placeholder="Absent" class="w-full p-2 rounded border focus:border-depart-green outline-none">
+                            <input type="text" name="culte_1_motifs" placeholder="Nom & Motif" class="w-full p-2 rounded border focus:border-depart-green outline-none">
                         </div>
                     </div>
                     <!-- Prière 2 -->
                     <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
                         <h5 class="font-bold text-gray-800 mb-3">Prière avant 2ème culte</h5>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                            <input type="number" name="priere_2_nbre" placeholder="Nbre Serviteur" class="w-full p-2 rounded border focus:border-[#D2AF1F] outline-none">
-                            <input type="number" name="priere_2_programme" placeholder="Programmé" class="w-full p-2 rounded border focus:border-[#D2AF1F] outline-none">
-                            <input type="number" name="priere_2_absent" placeholder="Absent" class="w-full p-2 rounded border focus:border-[#D2AF1F] outline-none">
-                            <input type="text" name="priere_2_motifs" placeholder="Nom & Motif" class="w-full p-2 rounded border focus:border-[#D2AF1F] outline-none">
+                            <input type="number" name="priere_2_nbre" placeholder="Nbre Serviteur" class="w-full p-2 rounded border focus:border-depart-green outline-none">
+                            <input type="number" name="priere_2_programme" placeholder="Programmé" class="w-full p-2 rounded border focus:border-depart-green outline-none">
+                            <input type="number" name="priere_2_absent" placeholder="Absent" class="w-full p-2 rounded border focus:border-depart-green outline-none">
+                            <input type="text" name="priere_2_motifs" placeholder="Nom & Motif" class="w-full p-2 rounded border focus:border-depart-green outline-none">
                         </div>
                     </div>
                     <!-- 2ème Culte -->
                     <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
                         <h5 class="font-bold text-gray-800 mb-3">2ème Culte</h5>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                            <input type="number" name="culte_2_nbre" placeholder="Nbre Serviteur" class="w-full p-2 rounded border focus:border-[#D2AF1F] outline-none">
-                            <input type="number" name="culte_2_programme" placeholder="Programmé" class="w-full p-2 rounded border focus:border-[#D2AF1F] outline-none">
-                            <input type="number" name="culte_2_absent" placeholder="Absent" class="w-full p-2 rounded border focus:border-[#D2AF1F] outline-none">
-                            <input type="text" name="culte_2_motifs" placeholder="Nom & Motif" class="w-full p-2 rounded border focus:border-[#D2AF1F] outline-none">
+                            <input type="number" name="culte_2_nbre" placeholder="Nbre Serviteur" class="w-full p-2 rounded border focus:border-depart-green outline-none">
+                            <input type="number" name="culte_2_programme" placeholder="Programmé" class="w-full p-2 rounded border focus:border-depart-green outline-none">
+                            <input type="number" name="culte_2_absent" placeholder="Absent" class="w-full p-2 rounded border focus:border-depart-green outline-none">
+                            <input type="text" name="culte_2_motifs" placeholder="Nom & Motif" class="w-full p-2 rounded border focus:border-depart-green outline-none">
                         </div>
                     </div>
                     <!-- Culte des Boss -->
                     <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
                         <h5 class="font-bold text-gray-800 mb-3">Culte des Boss</h5>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                            <input type="number" name="culte_boss_nbre" placeholder="Nbre Serviteur" class="w-full p-2 rounded border focus:border-[#D2AF1F] outline-none">
-                            <input type="number" name="culte_boss_programme" placeholder="Programmé" class="w-full p-2 rounded border focus:border-[#D2AF1F] outline-none">
-                            <input type="number" name="culte_boss_absent" placeholder="Absent" class="w-full p-2 rounded border focus:border-[#D2AF1F] outline-none">
-                            <input type="text" name="culte_boss_motifs" placeholder="Nom & Motif" class="w-full p-2 rounded border focus:border-[#D2AF1F] outline-none">
+                            <input type="number" name="culte_boss_nbre" placeholder="Nbre Serviteur" class="w-full p-2 rounded border focus:border-depart-green outline-none">
+                            <input type="number" name="culte_boss_programme" placeholder="Programmé" class="w-full p-2 rounded border focus:border-depart-green outline-none">
+                            <input type="number" name="culte_boss_absent" placeholder="Absent" class="w-full p-2 rounded border focus:border-depart-green outline-none">
+                            <input type="text" name="culte_boss_motifs" placeholder="Nom & Motif" class="w-full p-2 rounded border focus:border-depart-green outline-none">
                         </div>
                     </div>
                     <!-- Réveil Sentinelles -->
                     <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
                         <h5 class="font-bold text-gray-800 mb-3">Réveil Sentinelles (Lundi 5h)</h5>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                            <input type="number" name="reveil_sentinelles_nbre" placeholder="Nbre Serviteur" class="w-full p-2 rounded border focus:border-[#D2AF1F] outline-none">
-                            <input type="number" name="reveil_sentinelles_programme" placeholder="Programmé" class="w-full p-2 rounded border focus:border-[#D2AF1F] outline-none">
-                            <input type="number" name="reveil_sentinelles_absent" placeholder="Absent" class="w-full p-2 rounded border focus:border-[#D2AF1F] outline-none">
-                            <input type="text" name="reveil_sentinelles_motifs" placeholder="Nom & Motif" class="w-full p-2 rounded border focus:border-[#D2AF1F] outline-none">
+                            <input type="number" name="reveil_sentinelles_nbre" placeholder="Nbre Serviteur" class="w-full p-2 rounded border focus:border-depart-green outline-none">
+                            <input type="number" name="reveil_sentinelles_programme" placeholder="Programmé" class="w-full p-2 rounded border focus:border-depart-green outline-none">
+                            <input type="number" name="reveil_sentinelles_absent" placeholder="Absent" class="w-full p-2 rounded border focus:border-depart-green outline-none">
+                            <input type="text" name="reveil_sentinelles_motifs" placeholder="Nom & Motif" class="w-full p-2 rounded border focus:border-depart-green outline-none">
                         </div>
                     </div>
                 </div>
@@ -179,46 +179,46 @@
 
             <!-- 2. Observations générales et recommandations -->
             <div>
-                <h4 class="text-xl font-bold text-[#D2AF1F] mb-4 border-l-4 border-[#D2AF1F] pl-3">2. Observations et recommandations</h4>
+                <h4 class="text-xl font-bold text-depart-green mb-4 border-l-4 border-depart-gold pl-3">2. Observations et recommandations</h4>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-2">Points forts constatés</label>
-                        <textarea name="points_forts" rows="4" class="w-full p-3 rounded-lg border-2 border-gray-300 focus:border-[#D2AF1F] outline-none"></textarea>
+                        <textarea name="points_forts" rows="4" class="w-full p-3 rounded-lg border-2 border-gray-300 focus:border-depart-green outline-none"></textarea>
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-2">Difficultés observées</label>
-                        <textarea name="difficultes" rows="4" class="w-full p-3 rounded-lg border-2 border-gray-300 focus:border-[#D2AF1F] outline-none"></textarea>
+                        <textarea name="difficultes" rows="4" class="w-full p-3 rounded-lg border-2 border-gray-300 focus:border-depart-green outline-none"></textarea>
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-2">Recommandations</label>
-                        <textarea name="recommandations" rows="4" class="w-full p-3 rounded-lg border-2 border-gray-300 focus:border-[#D2AF1F] outline-none"></textarea>
+                        <textarea name="recommandations" rows="4" class="w-full p-3 rounded-lg border-2 border-gray-300 focus:border-depart-green outline-none"></textarea>
                     </div>
                 </div>
             </div>
 
             <!-- 3. Transmission du résumé -->
-            <div class="bg-blue-50 p-6 rounded-xl border border-blue-100">
-                <h4 class="text-xl font-bold text-[#D2AF1F] mb-4">3. Transmission du résumé du culte</h4>
+            <div class="bg-depart-green/5 p-6 rounded-xl border border-depart-green/20">
+                <h4 class="text-xl font-bold text-depart-gold mb-4">3. Transmission du résumé du culte</h4>
                 <p class="text-sm text-gray-600 mb-4">Indiquez le nombre de résumés transmis pour chaque culte</p>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-2">1er Culte</label>
-                        <input type="number" name="transmission_culte_1" class="w-full p-3 rounded-lg border-2 border-gray-300 focus:border-[#D2AF1F] outline-none" placeholder="Nombre transmis">
+                        <input type="number" name="transmission_culte_1" class="w-full p-3 rounded-lg border-2 border-gray-300 focus:border-depart-gold outline-none" placeholder="Nombre transmis">
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-2">2ème Culte</label>
-                        <input type="number" name="transmission_culte_2" class="w-full p-3 rounded-lg border-2 border-gray-300 focus:border-[#D2AF1F] outline-none" placeholder="Nombre transmis">
+                        <input type="number" name="transmission_culte_2" class="w-full p-3 rounded-lg border-2 border-gray-300 focus:border-depart-gold outline-none" placeholder="Nombre transmis">
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-2">Culte des Boss</label>
-                        <input type="number" name="transmission_culte_boss" class="w-full p-3 rounded-lg border-2 border-gray-300 focus:border-[#D2AF1F] outline-none" placeholder="Nombre transmis">
+                        <input type="number" name="transmission_culte_boss" class="w-full p-3 rounded-lg border-2 border-gray-300 focus:border-depart-gold outline-none" placeholder="Nombre transmis">
                     </div>
                 </div>
             </div>
             
             <div class="pt-4 flex justify-end gap-4">
                 <button type="button" onclick="closeModal('rapportModal')" class="px-6 py-3 border-2 border-gray-300 text-gray-600 font-bold rounded-lg hover:bg-gray-100">Annuler</button>
-                <button type="submit" class="px-8 py-3 bg-[#D2AF1F] hover:bg-[#B8961C] text-white font-bold rounded-lg shadow-lg hover:shadow-xl transition-all">Soumettre le Rapport</button>
+                <button type="submit" class="px-8 py-3 bg-depart-green hover:bg-depart-green-dark text-white font-bold rounded-lg shadow-lg hover:shadow-xl transition-all">Soumettre le Rapport</button>
             </div>
         </form>
     </div>
@@ -228,7 +228,7 @@
 <div id="presenceModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
     <div class="glass-card w-full max-w-lg p-6 rounded-2xl bg-white">
         <div class="flex justify-between items-center mb-6">
-            <h3 class="text-xl font-bold text-[#D2AF1F]">Nouvelle Présence</h3>
+            <h3 class="text-xl font-bold text-depart-green">Nouvelle Présence</h3>
             <button onclick="closeModal('presenceModal')" class="text-gray-500">✕</button>
         </div>
         <form action="{% url 'ajout_presence' %}" method="POST" class="space-y-4">
@@ -255,7 +255,7 @@
             </select>
             <input type="date" name="date" class="w-full p-3 rounded-lg border outline-none" required>
             <textarea name="motif_absence" placeholder="Motif (si absent)" class="w-full p-3 rounded-lg border outline-none"></textarea>
-            <button type="submit" class="w-full py-3 bg-[#D2AF1F] hover:bg-[#B8961C] text-white font-bold rounded-lg">Enregistrer</button>
+            <button type="submit" class="w-full py-3 bg-depart-green hover:bg-depart-green-dark text-white font-bold rounded-lg">Enregistrer</button>
         </form>
     </div>
 </div>
@@ -287,7 +287,7 @@
             </div>
             
             <textarea name="defis_spirituels" placeholder="Défis spirituels" class="w-full p-3 rounded-lg border outline-none"></textarea>
-            <button type="submit" class="w-full py-3 bg-green-600 text-white font-bold rounded-lg">Enregistrer</button>
+            <button type="submit" class="w-full py-3 bg-depart-green text-white font-bold rounded-lg hover:bg-depart-green-dark transition-all">Enregistrer</button>
         </form>
     </div>
 </div>
@@ -296,7 +296,7 @@
 <div id="resumeModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
     <div class="glass-card w-full max-w-lg p-6 rounded-2xl bg-white">
         <div class="flex justify-between items-center mb-6">
-            <h3 class="text-xl font-bold text-purple-600">Transmission Résumé</h3>
+            <h3 class="text-xl font-bold text-depart-gold">Transmission Résumé</h3>
             <button onclick="closeModal('resumeModal')" class="text-gray-500">✕</button>
         </div>
         <form action="{% url 'transmission_resume_culte' %}" method="POST" class="space-y-4">
@@ -319,7 +319,7 @@
                 <option value="Non">Non transmis</option>
                 <option value="En retard">En retard</option>
             </select>
-            <button type="submit" class="w-full py-3 bg-purple-600 text-white font-bold rounded-lg">Enregistrer</button>
+            <button type="submit" class="w-full py-3 bg-depart-gold text-white font-bold rounded-lg hover:bg-depart-gold-light transition-all">Enregistrer</button>
         </form>
     </div>
 </div>

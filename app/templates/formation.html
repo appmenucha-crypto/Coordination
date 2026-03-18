@@ -10,30 +10,30 @@
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
             </button>
             <div>
-                <h1 class="text-3xl lg:text-4xl font-display font-bold text-pure-blue mb-2">Formation <span class="text-pure-green">Technique</span></h1>
+                <h1 class="text-3xl lg:text-4xl font-display font-bold text-depart-green mb-2">Formation <span class="text-depart-gold">Technique</span></h1>
                 <p class="text-gray-600">Assurer la qualité et l'excellence du service</p>
             </div>
         </div>
-        <button onclick="openModal('formationModal')" class="w-full lg:w-auto px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-bold rounded-xl hover:shadow-lg transition-all">
+        <button onclick="openModal('formationModal')" class="w-full lg:w-auto px-6 py-3 bg-depart-green hover:bg-depart-green-dark text-white font-bold rounded-xl hover:shadow-lg transition-all">
             + Nouvelle Formation
         </button>
     </header>
 
     <div class="glass-card rounded-2xl overflow-hidden">
-        <div class="p-6 border-b-2 border-pure-green/20">
-            <h3 class="font-bold text-xl text-pure-green-dark">Formations Disponibles</h3>
+        <div class="p-6 border-b-2 border-depart-gold/20">
+            <h3 class="font-bold text-xl text-depart-green">Formations Disponibles</h3>
         </div>
         <div class="p-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {% for formation in formations %}
-                <div class="p-4 bg-green-50 rounded-xl border-l-4 {% if formation.statut_validation == 'VALIDEE' %}border-green-500{% elif formation.statut_validation == 'REJETEE' %}border-red-500{% else %}border-yellow-500{% endif %} hover:shadow-md transition-all">
+                <div class="p-4 bg-gray-50 rounded-xl border-l-4 {% if formation.statut_validation == 'VALIDEE' %}border-depart-green{% elif formation.statut_validation == 'REJETEE' %}border-red-500{% else %}border-depart-gold{% endif %} hover:shadow-md transition-all">
                     <div class="flex justify-between items-start mb-2">
                         <h4 class="font-bold text-gray-800">{{ formation.titre }}</h4>
                         <div class="flex gap-2">
                             {% if formation.est_en_ligne %}
-                            <span class="px-2 py-1 bg-pure-blue/20 text-pure-blue text-xs font-bold rounded">EN LIGNE</span>
+                            <span class="px-2 py-1 bg-depart-green/20 text-depart-green text-xs font-bold rounded">EN LIGNE</span>
                             {% endif %}
-                            <span class="px-2 py-1 {% if formation.statut_validation == 'VALIDEE' %}bg-green-500/20 text-green-700{% elif formation.statut_validation == 'REJETEE' %}bg-red-500/20 text-red-700{% else %}bg-yellow-500/20 text-yellow-700{% endif %} text-xs font-bold rounded">
+                            <span class="px-2 py-1 {% if formation.statut_validation == 'VALIDEE' %}bg-depart-green/20 text-depart-green{% elif formation.statut_validation == 'REJETEE' %}bg-red-500/20 text-red-700{% else %}bg-depart-gold/20 text-depart-gold{% endif %} text-xs font-bold rounded">
                                 {{ formation.get_statut_validation_display }}
                             </span>
                         </div>
@@ -48,7 +48,7 @@
                     
                     <div class="flex justify-between items-center text-xs mb-2">
                         <span class="text-gray-500">{{ formation.date_debut|date:"d M Y" }} {% if formation.date_fin %}- {{ formation.date_fin|date:"d M Y" }}{% endif %}</span>
-                        <span class="px-2 py-1 bg-pure-green/20 text-pure-green-dark rounded font-semibold">{{ formation.get_statut_display }}</span>
+                        <span class="px-2 py-1 bg-depart-gold/20 text-depart-gold-dark rounded font-semibold">{{ formation.get_statut_display }}</span>
                     </div>
                     
                     <div class="flex gap-2 mt-2">
@@ -58,7 +58,7 @@
                         </a>
                         {% endif %}
                         {% if formation.supports %}
-                        <a href="{{ formation.supports.url }}" target="_blank" class="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded flex items-center gap-1 hover:bg-blue-200">
+                        <a href="{{ formation.supports.url }}" target="_blank" class="text-xs px-2 py-1 bg-gray-100 text-gray-700 rounded flex items-center gap-1 hover:bg-gray-200">
                             📄 PDF
                         </a>
                         {% endif %}
@@ -66,7 +66,7 @@
                     
                     {% if formation.lien_online %}
                     <div class="mt-2">
-                        <a href="{{ formation.lien_online }}" target="_blank" class="text-xs text-blue-600 hover:text-blue-800 underline flex items-center gap-1">
+                        <a href="{{ formation.lien_online }}" target="_blank" class="text-xs text-depart-green hover:text-depart-green-dark underline flex items-center gap-1">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                             Accéder à la formation en ligne
                         </a>
@@ -92,9 +92,9 @@
 
 <!-- FORMATION MODAL -->
 <div id="formationModal" class="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="glass-card w-full max-w-lg p-8 rounded-2xl border-2 border-pure-blue max-h-[90vh] overflow-y-auto">
+    <div class="glass-card w-full max-w-lg p-8 rounded-2xl border-2 border-depart-green max-h-[90vh] overflow-y-auto">
         <div class="flex justify-between items-center mb-6">
-            <h3 class="text-2xl font-display font-bold text-pure-blue">Nouvelle Formation</h3>
+            <h3 class="text-2xl font-display font-bold text-depart-green">Nouvelle Formation</h3>
             <button onclick="closeModal('formationModal')" class="text-gray-600 hover:text-gray-900">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
@@ -104,11 +104,11 @@
             {% csrf_token %}
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-2">Titre</label>
-<input type="text" name="titre" placeholder="Titre de la formation" class="w-full p-3 rounded-lg bg-white border-2 border-gray-300 text-gray-900 text-sm focus:border-pure-blue focus:outline-none" required>
+                <input type="text" name="titre" placeholder="Titre de la formation" class="w-full p-3 rounded-lg bg-white border-2 border-gray-300 text-gray-900 text-sm focus:border-depart-green focus:outline-none" required>
             </div>
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-2">Description</label>
-                <textarea name="description" rows="3" class="w-full p-3 rounded-lg bg-white border-2 border-gray-300 text-gray-900 text-sm focus:border-pure-blue focus:outline-none" placeholder="Description de la formation..." required></textarea>
+                <textarea name="description" rows="3" class="w-full p-3 rounded-lg bg-white border-2 border-gray-300 text-gray-900 text-sm focus:border-depart-green focus:outline-none" placeholder="Description de la formation..." required></textarea>
             </div>
             
             {% if is_admin %}
@@ -172,7 +172,7 @@
                 </div>
             </div>
             
-            <button type="submit" class="w-full py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-bold rounded-lg text-sm hover:shadow-lg transition-all">
+            <button type="submit" class="w-full py-3 bg-depart-green text-white font-bold rounded-lg text-sm hover:shadow-lg transition-all">
                 CRÉER LA FORMATION
             </button>
         </form>
