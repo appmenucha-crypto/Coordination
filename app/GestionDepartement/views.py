@@ -2039,12 +2039,26 @@ def dashboard_responsable(request):
 @login_required
 def liste_notifications(request):
     """Liste de toutes les notifications de l'utilisateur"""
-    notifications = Notification.objects.filter(utilisateur=request.user)
+    notifications = Notification.objects.filter(utilisateur=request.user).order_by('-date_creation')
     paginator = Paginator(notifications, 20)
     page_number = request.GET.get('page')
     notifications_page = paginator.get_page(page_number)
     
-    return render(request, 'notifications/liste.html', {'notifications': notifications_page})
+    # Déterminer quel template utiliser en fonction du rôle de l'utilisateur
+    is_admin = False
+    try:
+        if request.user.profile.role == UserProfile.Role.ADMIN:
+            is_admin = True
+    except (UserProfile.DoesNotExist, AttributeError):
+        if request.user.is_superuser:
+            is_admin = True
+
+    if is_admin:
+        template_name = 'admin/notifications/liste.html'
+    else:
+        template_name = 'notifications/liste.html'
+        
+    return render(request, template_name, {'notifications': notifications_page})
 
 
 @login_required
