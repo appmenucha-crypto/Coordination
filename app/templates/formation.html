@@ -5,9 +5,14 @@
 {% block content %}
 <div class="animate-fade-in">
     <header class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-4">
-        <div>
-            <h1 class="text-4xl font-display font-bold text-pure-blue mb-2">Formation <span class="text-pure-green">Technique</span></h1>
-            <p class="text-gray-600">Assurer la qualité et l'excellence du service</p>
+        <div class="flex items-center gap-4 w-full lg:w-auto">
+            <button onclick="toggleSidebar()" class="lg:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
+            <div>
+                <h1 class="text-3xl lg:text-4xl font-display font-bold text-pure-blue mb-2">Formation <span class="text-pure-green">Technique</span></h1>
+                <p class="text-gray-600">Assurer la qualité et l'excellence du service</p>
+            </div>
         </div>
         <button onclick="openModal('formationModal')" class="w-full lg:w-auto px-6 py-3 blue-gradient text-white font-bold rounded-xl hover:shadow-lg transition-all">
             + Nouvelle Formation

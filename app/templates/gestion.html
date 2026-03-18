@@ -26,13 +26,13 @@
 
     <!-- Cartes d'action rapide -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        <div class="glass-card p-6 rounded-2xl hover:shadow-lg transition-all cursor-pointer" onclick="openModal('incidentModal')">
+        <a href="{% url 'rapport_incident' %}" class="glass-card p-6 rounded-2xl hover:shadow-lg transition-all cursor-pointer block">
             <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center text-red-600 mb-4">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
             </div>
             <h3 class="font-bold text-lg text-gray-800 mb-2">Signaler un Incident</h3>
             <p class="text-sm text-gray-500">Rapporter un cas de discipline ou un problème</p>
-        </div>
+        </a>
         
         <div class="glass-card p-6 rounded-2xl hover:shadow-lg transition-all cursor-pointer" onclick="openModal('santeModal')">
             <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-green-600 mb-4">
@@ -89,45 +89,246 @@
 <!-- Modals -->
 <!-- Rapport Modal -->
 <div id="rapportModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-    <div class="glass-card w-full max-w-2xl p-6 rounded-2xl max-h-[90vh] overflow-y-auto bg-white">
-        <div class="flex justify-between items-center mb-6">
-            <h3 class="text-xl font-bold text-pure-blue">Nouveau Rapport de Culte</h3>
-            <button onclick="closeModal('rapportModal')" class="text-gray-500"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+    <div class="glass-card w-full max-w-5xl p-6 rounded-2xl max-h-[90vh] overflow-y-auto bg-white">
+        <div class="flex justify-between items-center mb-6 border-b pb-4">
+            <div>
+                <h3 class="text-2xl font-bold text-pure-blue">Rapport de Culte</h3>
+                <p class="text-gray-500">Département: <span class="font-semibold text-pure-green">{{ nom_departement }}</span></p>
+            </div>
+            <button onclick="closeModal('rapportModal')" class="text-gray-500 hover:text-red-500">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
         </div>
-        <form action="{% url 'soumission_rapport_culte' %}" method="POST" class="space-y-4">
+        
+        <form action="{% url 'soumission_rapport_culte' %}" method="POST" class="space-y-8">
             {% csrf_token %}
             <input type="hidden" name="nom_departement" value="{{ nom_departement }}">
             <input type="hidden" name="responsable" value="{{ user.profile.membre.id }}">
             
             <div>
-                <label class="block text-sm font-semibold mb-1">Date du culte</label>
-                <input type="date" name="date_culte" class="w-full p-3 rounded-lg border focus:border-pure-blue outline-none" required>
+                <label class="block text-sm font-bold text-gray-700 mb-2">Date du culte *</label>
+                <input type="date" name="date_culte" class="w-full md:w-1/3 p-3 rounded-lg border-2 border-gray-300 focus:border-pure-blue focus:outline-none" required>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="p-4 bg-gray-50 rounded-lg">
-                    <p class="font-bold mb-2">1er Culte</p>
-                    <input type="number" name="culte_1_nbre" placeholder="Présents" class="w-full mb-2 p-2 border rounded">
-                    <input type="number" name="culte_1_programme" placeholder="Programmés" class="w-full p-2 border rounded">
-                </div>
-                <div class="p-4 bg-gray-50 rounded-lg">
-                    <p class="font-bold mb-2">2ème Culte</p>
-                    <input type="number" name="culte_2_nbre" placeholder="Présents" class="w-full mb-2 p-2 border rounded">
-                    <input type="number" name="culte_2_programme" placeholder="Programmés" class="w-full p-2 border rounded">
-                </div>
-                <div class="p-4 bg-gray-50 rounded-lg">
-                    <p class="font-bold mb-2">Culte des Boss</p>
-                    <input type="number" name="culte_boss_nbre" placeholder="Présents" class="w-full mb-2 p-2 border rounded">
-                    <input type="number" name="culte_boss_programme" placeholder="Programmés" class="w-full p-2 border rounded">
-                </div>
-            </div>
-            
+            <!-- 1. Présence des serviteurs -->
             <div>
-                <label class="block text-sm font-semibold mb-1">Points forts</label>
-                <textarea name="points_forts" rows="2" class="w-full p-3 rounded-lg border focus:border-pure-blue outline-none"></textarea>
+                <h4 class="text-xl font-bold text-pure-blue mb-4 border-l-4 border-pure-blue pl-3">1. Présence des serviteurs lors des services au culte</h4>
+                <div class="space-y-4">
+                    {% for activite_key, activite_label in "priere_1:Prière avant 1er culte,culte_1:1er Culte,priere_2:Prière avant 2ème culte,culte_2:2ème Culte,culte_boss:Culte des Boss,reveil_sentinelles:Réveil Sentinelles (Lundi 5h)"|slice:":100"|make_list|dictsort:"0" %}
+                        <!-- Astuce pour itérer sur une liste définie manuellement via split en JS ou simple répétition HTML pour clarté -->
+                    {% endfor %}
+
+                    <!-- Prière 1 -->
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
+                        <h5 class="font-bold text-gray-800 mb-3">Prière avant 1er culte</h5>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                            <input type="number" name="priere_1_nbre" placeholder="Nbre Serviteur" class="w-full p-2 rounded border focus:border-pure-blue outline-none">
+                            <input type="number" name="priere_1_programme" placeholder="Programmé" class="w-full p-2 rounded border focus:border-pure-blue outline-none">
+                            <input type="number" name="priere_1_absent" placeholder="Absent" class="w-full p-2 rounded border focus:border-pure-blue outline-none">
+                            <input type="text" name="priere_1_motifs" placeholder="Nom & Motif" class="w-full p-2 rounded border focus:border-pure-blue outline-none">
+                        </div>
+                    </div>
+
+                    <!-- 1er Culte -->
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
+                        <h5 class="font-bold text-gray-800 mb-3">1er Culte</h5>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                            <input type="number" name="culte_1_nbre" placeholder="Nbre Serviteur" class="w-full p-2 rounded border focus:border-pure-blue outline-none">
+                            <input type="number" name="culte_1_programme" placeholder="Programmé" class="w-full p-2 rounded border focus:border-pure-blue outline-none">
+                            <input type="number" name="culte_1_absent" placeholder="Absent" class="w-full p-2 rounded border focus:border-pure-blue outline-none">
+                            <input type="text" name="culte_1_motifs" placeholder="Nom & Motif" class="w-full p-2 rounded border focus:border-pure-blue outline-none">
+                        </div>
+                    </div>
+
+                    <!-- Prière 2 -->
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
+                        <h5 class="font-bold text-gray-800 mb-3">Prière avant 2ème culte</h5>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                            <input type="number" name="priere_2_nbre" placeholder="Nbre Serviteur" class="w-full p-2 rounded border focus:border-pure-blue outline-none">
+                            <input type="number" name="priere_2_programme" placeholder="Programmé" class="w-full p-2 rounded border focus:border-pure-blue outline-none">
+                            <input type="number" name="priere_2_absent" placeholder="Absent" class="w-full p-2 rounded border focus:border-pure-blue outline-none">
+                            <input type="text" name="priere_2_motifs" placeholder="Nom & Motif" class="w-full p-2 rounded border focus:border-pure-blue outline-none">
+                        </div>
+                    </div>
+
+                    <!-- 2ème Culte -->
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
+                        <h5 class="font-bold text-gray-800 mb-3">2ème Culte</h5>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                            <input type="number" name="culte_2_nbre" placeholder="Nbre Serviteur" class="w-full p-2 rounded border focus:border-pure-blue outline-none">
+                            <input type="number" name="culte_2_programme" placeholder="Programmé" class="w-full p-2 rounded border focus:border-pure-blue outline-none">
+                            <input type="number" name="culte_2_absent" placeholder="Absent" class="w-full p-2 rounded border focus:border-pure-blue outline-none">
+                            <input type="text" name="culte_2_motifs" placeholder="Nom & Motif" class="w-full p-2 rounded border focus:border-pure-blue outline-none">
+                        </div>
+                    </div>
+
+                    <!-- Culte des Boss -->
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
+                        <h5 class="font-bold text-gray-800 mb-3">Culte des Boss</h5>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                            <input type="number" name="culte_boss_nbre" placeholder="Nbre Serviteur" class="w-full p-2 rounded border focus:border-pure-blue outline-none">
+                            <input type="number" name="culte_boss_programme" placeholder="Programmé" class="w-full p-2 rounded border focus:border-pure-blue outline-none">
+                            <input type="number" name="culte_boss_absent" placeholder="Absent" class="w-full p-2 rounded border focus:border-pure-blue outline-none">
+                            <input type="text" name="culte_boss_motifs" placeholder="Nom & Motif" class="w-full p-2 rounded border focus:border-pure-blue outline-none">
+                        </div>
+                    </div>
+
+                    <!-- Réveil Sentinelles -->
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
+                        <h5 class="font-bold text-gray-800 mb-3">Réveil Sentinelles (Lundi 5h)</h5>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                            <input type="number" name="reveil_sentinelles_nbre" placeholder="Nbre Serviteur" class="w-full p-2 rounded border focus:border-pure-blue outline-none">
+                            <input type="number" name="reveil_sentinelles_programme" placeholder="Programmé" class="w-full p-2 rounded border focus:border-pure-blue outline-none">
+                            <input type="number" name="reveil_sentinelles_absent" placeholder="Absent" class="w-full p-2 rounded border focus:border-pure-blue outline-none">
+                            <input type="text" name="reveil_sentinelles_motifs" placeholder="Nom & Motif" class="w-full p-2 rounded border focus:border-pure-blue outline-none">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Observations générales et recommandations -->
+            <div>
+                <h4 class="text-xl font-bold text-pure-blue mb-4 border-l-4 border-pure-blue pl-3">2. Observations générales et recommandations</h4>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Points forts constatés</label>
+                        <textarea name="points_forts" rows="4" class="w-full p-3 rounded-lg border-2 border-gray-300 focus:border-pure-blue outline-none"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Difficultés observées</label>
+                        <textarea name="difficultes" rows="4" class="w-full p-3 rounded-lg border-2 border-gray-300 focus:border-pure-blue outline-none"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Recommandations</label>
+                        <textarea name="recommandations" rows="4" class="w-full p-3 rounded-lg border-2 border-gray-300 focus:border-pure-blue outline-none"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Transmission du résumé -->
+            <div class="bg-blue-50 p-6 rounded-xl border border-blue-100">
+                <h4 class="text-xl font-bold text-pure-blue mb-4">3. Transmission du résumé du culte</h4>
+                <p class="text-sm text-gray-600 mb-4">Indiquez le nombre de résumés transmis pour chaque culte</p>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">1er Culte</label>
+                        <input type="number" name="transmission_culte_1" class="w-full p-3 rounded-lg border-2 border-gray-300 focus:border-pure-blue outline-none" placeholder="Nombre transmis">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">2ème Culte</label>
+                        <input type="number" name="transmission_culte_2" class="w-full p-3 rounded-lg border-2 border-gray-300 focus:border-pure-blue outline-none" placeholder="Nombre transmis">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Culte des Boss</label>
+                        <input type="number" name="transmission_culte_boss" class="w-full p-3 rounded-lg border-2 border-gray-300 focus:border-pure-blue outline-none" placeholder="Nombre transmis">
+                    </div>
+                </div>
             </div>
             
-            <button type="submit" class="w-full py-3 blue-gradient text-white font-bold rounded-lg hover:shadow-lg transition-all">Soumettre le Rapport</button>
+            <div class="pt-4 flex justify-end gap-4">
+                <button type="button" onclick="closeModal('rapportModal')" class="px-6 py-3 border-2 border-gray-300 text-gray-600 font-bold rounded-lg hover:bg-gray-100">Annuler</button>
+                <button type="submit" class="px-8 py-3 blue-gradient text-white font-bold rounded-lg shadow-lg hover:shadow-xl transition-all">Soumettre le Rapport</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Presence Modal -->
+<div id="presenceModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+    <div class="glass-card w-full max-w-lg p-6 rounded-2xl bg-white">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-xl font-bold text-pure-blue">Nouvelle Présence</h3>
+            <button onclick="closeModal('presenceModal')" class="text-gray-500">✕</button>
+        </div>
+        <form action="{% url 'ajout_presence' %}" method="POST" class="space-y-4">
+            {% csrf_token %}
+            <select name="membre" class="w-full p-3 rounded-lg border outline-none" required>
+                <option value="">Sélectionner un membre</option>
+                {% for membre in membres %}
+                <option value="{{ membre.id }}">{{ membre.nom_complet }}</option>
+                {% endfor %}
+            </select>
+            <select name="type_activite" class="w-full p-3 rounded-lg border outline-none" required>
+                <option value="CULTE_1">1er Culte</option>
+                <option value="CULTE_2">2ème Culte</option>
+                <option value="CULTE_BOSS">Culte des Boss</option>
+                <option value="PRIERE_1">Prière avant 1er culte</option>
+                <option value="PRIERE_2">Prière avant 2ème culte</option>
+                <option value="REVEIL_SENT">Réveil Sentinelles</option>
+            </select>
+            <select name="status" class="w-full p-3 rounded-lg border outline-none" required>
+                <option value="PRESENT">Présent</option>
+                <option value="ABSENT">Absent</option>
+                <option value="RETARD">En retard</option>
+                <option value="EXCUSE">Excusé</option>
+            </select>
+            <input type="date" name="date" class="w-full p-3 rounded-lg border outline-none" required>
+            <textarea name="motif_absence" placeholder="Motif (si absent)" class="w-full p-3 rounded-lg border outline-none"></textarea>
+            <button type="submit" class="w-full py-3 blue-gradient text-white font-bold rounded-lg">Enregistrer</button>
+        </form>
+    </div>
+</div>
+
+<!-- Sante Spirituelle Modal -->
+<div id="santeModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+    <div class="glass-card w-full max-w-lg p-6 rounded-2xl bg-white max-h-[90vh] overflow-y-auto">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-xl font-bold text-green-600">Fiche Santé Spirituelle</h3>
+            <button onclick="closeModal('santeModal')" class="text-gray-500">✕</button>
+        </div>
+        <form action="{% url 'soumission_fiche_sante' %}" method="POST" class="space-y-4">
+            {% csrf_token %}
+            <select name="membre" class="w-full p-3 rounded-lg border outline-none" required>
+                <option value="">Sélectionner un membre</option>
+                {% for membre in membres %}
+                <option value="{{ membre.id }}">{{ membre.nom_complet }}</option>
+                {% endfor %}
+            </select>
+            <input type="month" name="mois" class="w-full p-3 rounded-lg border outline-none" required>
+            
+            <div class="space-y-2">
+                <label class="text-sm font-semibold">Notes (1 à 5)</label>
+                <input type="number" name="priere_quotidienne" placeholder="Prière quotidienne" min="1" max="5" class="w-full p-2 border rounded" required>
+                <input type="number" name="lecture_biblique" placeholder="Lecture biblique" min="1" max="5" class="w-full p-2 border rounded" required>
+                <input type="number" name="communion_avec_dieu" placeholder="Communion avec Dieu" min="1" max="5" class="w-full p-2 border rounded" required>
+                <input type="number" name="assiduite_culte" placeholder="Assiduité au culte" min="1" max="5" class="w-full p-2 border rounded" required>
+                <input type="number" name="service_rendu" placeholder="Service rendu" min="1" max="5" class="w-full p-2 border rounded" required>
+            </div>
+            
+            <textarea name="defis_spirituels" placeholder="Défis spirituels" class="w-full p-3 rounded-lg border outline-none"></textarea>
+            <button type="submit" class="w-full py-3 bg-green-600 text-white font-bold rounded-lg">Enregistrer</button>
+        </form>
+    </div>
+</div>
+
+<!-- Resume Modal -->
+<div id="resumeModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+    <div class="glass-card w-full max-w-lg p-6 rounded-2xl bg-white">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-xl font-bold text-purple-600">Transmission Résumé</h3>
+            <button onclick="closeModal('resumeModal')" class="text-gray-500">✕</button>
+        </div>
+        <form action="{% url 'transmission_resume_culte' %}" method="POST" class="space-y-4">
+            {% csrf_token %}
+            <input type="hidden" name="entry_count" value="1">
+            <select name="serviteur_1" class="w-full p-3 rounded-lg border outline-none" required>
+                <option value="">Sélectionner le serviteur</option>
+                {% for membre in membres %}
+                <option value="{{ membre.id }}">{{ membre.nom_complet }}</option>
+                {% endfor %}
+            </select>
+            <select name="culte_1" class="w-full p-3 rounded-lg border outline-none" required>
+                <option value="1er Culte">1er Culte</option>
+                <option value="2ème Culte">2ème Culte</option>
+                <option value="Culte des Boss">Culte des Boss</option>
+            </select>
+            <input type="date" name="date_culte_1" class="w-full p-3 rounded-lg border outline-none" required>
+            <select name="resum_transmis_1" class="w-full p-3 rounded-lg border outline-none">
+                <option value="Oui">Transmis</option>
+                <option value="Non">Non transmis</option>
+                <option value="En retard">En retard</option>
+            </select>
+            <button type="submit" class="w-full py-3 bg-purple-600 text-white font-bold rounded-lg">Enregistrer</button>
         </form>
     </div>
 </div>

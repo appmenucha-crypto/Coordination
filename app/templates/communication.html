@@ -1,90 +1,162 @@
-{% extends 'responsable/base_responsable.html' %}
+{% extends 'base.html' %}
 
-{% block title %}Communication{% endblock %}
+{% block title %}Communication - {% endblock %}
 
 {% block content %}
 <div class="animate-fade-in">
-    <header class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-4">
-        <div>
-            <h1 class="text-3xl lg:text-4xl font-display font-bold text-pure-blue mb-2">Com <span class="text-purple-500">& Médias</span></h1>
-            <p class="text-gray-600">Actualités et ressources multimédias</p>
-        </div>
-        <button onclick="openModal('actuModal')" class="w-full lg:w-auto px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-xl transition-all text-sm">
-            + Nouvelle Actualité
-        </button>
+    <header class="mb-8">
+        <h1 class="text-4xl font-display font-bold text-pure-blue mb-2">Communication & <span class="text-pure-green">Média</span></h1>
+        <p class="text-gray-600">Relayer et centraliser les informations de l'église</p>
     </header>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-        {% for actu in dernieres_actualites %}
-        <div class="glass-card rounded-2xl overflow-hidden hover:shadow-xl transition-all flex flex-col h-full">
-            <div class="h-48 bg-purple-100 relative">
-                {% if actu.image %}
-                <img src="{{ actu.image.url }}" class="w-full h-full object-cover">
-                {% else %}
-                <div class="w-full h-full flex items-center justify-center text-purple-300">
-                    <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path></svg>
-                </div>
-                {% endif %}
-                {% if actu.est_urgent %}
-                <span class="absolute top-2 right-2 px-2 py-1 bg-red-500 text-white text-xs font-bold rounded">URGENT</span>
-                {% endif %}
-            </div>
-            <div class="p-6 flex-1 flex flex-col">
-                <div class="flex justify-between items-start mb-2">
-                    <span class="text-xs font-bold text-purple-500 uppercase">{{ actu.get_categorie_display }}</span>
-                    <span class="text-xs text-gray-400">{{ actu.date_publication|date:"d M" }}</span>
-                </div>
-                <h3 class="font-bold text-xl mb-2 text-gray-800">{{ actu.titre }}</h3>
-                <p class="text-sm text-gray-600 line-clamp-3 mb-4 flex-1">{{ actu.contenu }}</p>
-                <div class="pt-4 border-t border-gray-100">
-                    <a href="#" class="text-sm font-semibold text-purple-600 hover:text-purple-800">Lire la suite →</a>
-                </div>
-            </div>
-        </div>
-        {% empty %}
-        <div class="col-span-full py-12 text-center text-gray-500 bg-gray-50 rounded-2xl">
-            Aucune actualité publiée
-        </div>
-        {% endfor %}
-    </div>
 
-    <h2 class="text-2xl font-bold text-gray-800 mb-6">Galerie Récente</h2>
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {% for media in galerie_medias %}
-        <div class="aspect-square rounded-xl overflow-hidden bg-gray-100 relative group cursor-pointer">
-            {% if media.fichier %}
-                {% if media.type_media == 'image' %}
-                <img src="{{ media.fichier.url }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-                {% else %}
-                <div class="w-full h-full flex items-center justify-center bg-gray-800 text-white">
-                    <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                </div>
-                {% endif %}
-            {% endif %}
-            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
-                <p class="text-white text-sm font-bold">{{ media.titre }}</p>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2 space-y-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold text-xl text-pure-blue">Dernières Actualités</h3>
+                <a href="{% url 'liste_actualites' %}" class="text-sm text-pure-blue hover:underline font-semibold">Voir tout →</a>
             </div>
+            
+            {% for actualite in dernieres_actualites %}
+            <article class="glass-card p-6 rounded-2xl hover:shadow-xl transition-all">
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="w-full md:w-48 h-32 bg-gray-200 rounded-xl overflow-hidden flex-shrink-0">
+                        {% if actualite.image and actualite.image.url %}
+                        <img src="{{ actualite.image.url }}" alt="{{ actualite.titre }}" class="w-full h-full object-cover">
+                        {% else %}
+                        <div class="w-full h-full bg-gradient-to-br from-pure-blue/20 to-pure-green/20 flex items-center justify-center">
+                            <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="flex-1">
+                        <span class="text-xs font-bold text-pure-blue uppercase mb-2 block">{{ actualite.get_categorie_display }} • {{ actualite.date_publication }}</span>
+                        <h4 class="text-xl font-display font-bold text-gray-800 mb-2">{{ actualite.titre }}</h4>
+                        <p class="text-sm text-gray-600 leading-relaxed line-clamp-2">{{ actualite.contenu }}</p>
+                        <div class="flex gap-2 mt-4">
+                            <a href="{% url 'modifier_actualite' actualite.id %}" class="px-4 py-2 text-xs bg-pure-blue hover:bg-pure-blue-dark text-white rounded-lg transition-colors font-semibold">Modifier</a>
+                            <form method="POST" action="{% url 'supprimer_actualite' actualite.id %}" class="inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette actualité?');">
+                                {% csrf_token %}
+                                <button type="submit" class="px-4 py-2 text-xs bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors font-semibold">Supprimer</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </article>
+            {% empty %}
+            <div class="glass-card p-12 rounded-2xl text-center">
+                <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path></svg>
+                <p class="text-gray-500">Aucune actualité publiée</p>
+            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
-        <div onclick="openModal('mediaModal')" class="aspect-square rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center text-gray-400 cursor-pointer hover:border-purple-500 hover:text-purple-500 transition-colors">
-            <svg class="w-8 h-8 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-            <span class="text-xs font-bold">Ajouter</span>
+
+        <div class="space-y-6">
+            <div class="glass-card p-6 rounded-2xl border-2 border-pure-blue">
+                <h3 class="font-bold text-xl text-pure-blue mb-4">Publier une Actualité</h3>
+                <form action="{% url 'ajout_actualite' %}" method="POST" class="space-y-4" id="actualiteForm" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Titre</label>
+                        <input type="text" name="titre" placeholder="Titre de l'actualité" class="w-full p-3 rounded-lg bg-white border-2 border-gray-300 text-gray-800 text-sm focus:border-pure-blue focus:outline-none" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Contenu</label>
+                        <textarea name="contenu" rows="4" placeholder="Contenu de l'actualité..." class="w-full p-3 rounded-lg bg-white border-2 border-gray-300 text-gray-800 text-sm focus:border-pure-blue focus:outline-none" required></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Catégorie</label>
+                        <select name="categorie" class="w-full p-3 rounded-lg bg-white border-2 border-gray-300 text-gray-800 text-sm focus:border-pure-blue focus:outline-none">
+                            <option value="CELEBRATION">Célébration</option>
+                            <option value="FORMATION">Formation</option>
+                            <option value="COMMUNION">Communion</option>
+                            <option value="ANNONCE">Annonce</option>
+                            <option value="AUTRE">Autre</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Image (optionnel)</label>
+                        <input type="file" name="image" id="image" accept="image/*" class="w-full p-3 rounded-lg bg-white border-2 border-gray-300 text-gray-800 text-sm focus:border-pure-blue focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-pure-blue file:text-white hover:file:bg-pure-blue-dark">
+                    </div>
+                    <button type="submit" class="w-full py-3 blue-gradient text-white font-bold rounded-lg text-sm hover:shadow-lg transition-all">PUBLIER</button>
+                </form>
+            </div>
+            
+            <div class="glass-card p-6 rounded-2xl">
+                <h3 class="font-bold text-xl text-pure-green-dark mb-4">Galerie Souvenirs</h3>
+                <p class="text-sm text-gray-600 mb-4">Documenter les moments forts (photos & vidéos) pour renforcer la cohésion</p>
+                
+                <form action="{% url 'ajout_media' %}" method="POST" enctype="multipart/form-data" class="mb-6 p-4 bg-green-50 rounded-lg border-2 border-dashed border-pure-green">
+                    {% csrf_token %}
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Titre</label>
+                            <input type="text" name="titre" placeholder="Titre du média" class="w-full p-2 rounded-lg bg-white border-2 border-gray-300 text-gray-800 text-sm focus:border-pure-green focus:outline-none" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Type de média</label>
+                            <select name="type_media" id="typeMedia" class="w-full p-2 rounded-lg bg-white border-2 border-gray-300 text-gray-800 text-sm focus:border-pure-green focus:outline-none" required>
+                                <option value="image">Photo</option>
+                                <option value="video">Vidéo</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Fichier</label>
+                            <input type="file" name="fichier" id="fichierMedia" accept="image/*,video/*" class="w-full p-2 rounded-lg bg-white border-2 border-gray-300 text-gray-800 text-sm focus:border-pure-green focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-pure-green file:text-white hover:file:bg-pure-green-dark" required>
+                        </div>
+                        <button type="submit" class="w-full py-2 green-gradient text-white font-bold rounded-lg text-sm hover:shadow-lg transition-all">AJOUTER</button>
+                    </div>
+                </form>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    {% if galerie_medias %}
+                        {% for media in galerie_medias %}
+                        <div class="aspect-square bg-gray-200 rounded-lg hover:scale-95 transition-transform cursor-pointer border-2 border-gray-300 overflow-hidden group relative">
+                            {% if media.type_media == 'video' %}
+                                {% if media.fichier and media.fichier.url %}
+                                <video class="w-full h-full object-cover" controls>
+                                    <source src="{{ media.fichier.url }}" type="video/mp4">
+                                </video>
+                                <div class="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full font-bold">VIDEO</div>
+                                {% else %}
+                                <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">Pas de vidéo</div>
+                                {% endif %}
+                            {% else %}
+                                {% if media.fichier and media.fichier.url %}
+                                <img src="{{ media.fichier.url }}" alt="{{ media.titre }}" class="w-full h-full object-cover group-hover:opacity-80">
+                                {% else %}
+                                <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">Pas d'image</div>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                    <div class="aspect-square bg-gray-200 rounded-lg hover:scale-95 transition-transform cursor-pointer border-2 border-gray-300 flex items-center justify-center text-gray-400 text-xs">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <div class="aspect-square bg-gray-200 rounded-lg hover:scale-95 transition-transform cursor-pointer border-2 border-gray-300 flex items-center justify-center text-gray-400 text-xs">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <div class="aspect-square bg-gray-200 rounded-lg hover:scale-95 transition-transform cursor-pointer border-2 border-gray-300 flex items-center justify-center text-gray-400 text-xs">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <div class="aspect-square bg-gray-200 rounded-lg hover:scale-95 transition-transform cursor-pointer border-2 border-gray-300 flex items-center justify-center text-gray-400 text-xs">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    </div>
+                    {% endif %}
+                </div>
+                <button class="w-full mt-4 py-3 glass-card text-pure-green-dark font-bold text-sm rounded-lg hover:bg-green-50 transition-colors" disabled>VOIR TOUTE LA GALERIE (Bientôt disponible)</button>
+            </div>
         </div>
     </div>
 </div>
+{% endblock %}
 
-<!-- Modal Actualité (Simplifié) -->
-<div id="actuModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-    <div class="glass-card w-full max-w-lg p-6 rounded-2xl bg-white">
-        <!-- Formulaire similaire aux autres -->
-        <h3 class="text-xl font-bold mb-4">Nouvelle Actualité</h3>
-        <p class="text-gray-500 mb-4">Fonctionnalité disponible bientôt.</p>
-        <button onclick="closeModal('actuModal')" class="w-full py-2 bg-gray-200 rounded-lg">Fermer</button>
-    </div>
-</div>
-
+{% block extra_js %}
 <script>
-    function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
-    function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+    document.addEventListener('DOMContentLoaded', function() {
+        setupAjaxForm('actualiteForm', 'PUBLIER');
+    });
 </script>
 {% endblock %}

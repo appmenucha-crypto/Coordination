@@ -5,47 +5,246 @@
 {% block content %}
 <div class="animate-fade-in">
     <header class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-4">
-        <div>
-            <h1 class="text-3xl lg:text-4xl font-display font-bold text-pure-blue mb-2">Gestion <span class="text-yellow-500">Services</span></h1>
-            <p class="text-gray-600">Rotation des groupes et planning</p>
+        <div class="flex items-center gap-4 w-full lg:w-auto">
+            <button onclick="toggleSidebar()" class="lg:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
+            <div>
+                <h1 class="text-3xl lg:text-4xl font-display font-bold text-pure-blue mb-2">Gestion <span class="text-yellow-500">Services</span></h1>
+                <p class="text-gray-600">Rotation des groupes et planning</p>
+            </div>
         </div>
         <button onclick="openModal('planningModal')" class="w-full lg:w-auto px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-white font-bold rounded-xl transition-all text-sm">
             + Planning
         </button>
     </header>
 
-    <!-- Groupes de Service -->
-    <div class="mb-10">
-        <h2 class="text-xl font-bold text-gray-800 mb-4">Groupes de Service</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {% for groupe in groupes %}
-            <div class="glass-card p-4 rounded-xl border-l-4" style="border-color: {{ groupe.couleur }}">
-                <div class="flex justify-between items-center mb-2">
-                    <h3 class="font-bold text-lg">{{ groupe.nom_groupe }}</h3>
-                    <span class="w-3 h-3 rounded-full" style="background-color: {{ groupe.couleur }}"></span>
-                </div>
-                <p class="text-xs text-gray-500 mb-3">{{ groupe.membres.count }} membres</p>
-                <div class="flex -space-x-2 overflow-hidden">
-                    {% for membre in groupe.membres.all|slice:":4" %}
-                    <div class="w-8 h-8 rounded-full border-2 border-white bg-gray-200 flex items-center justify-center text-xs font-bold text-gray-600" title="{{ membre.nom_complet }}">
-                        {{ membre.prenom|first }}
-                    </div>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="mb-4 p-4 rounded-lg glass-card border-l-4 {% if message.tags == 'success' %}border-pure-green{% else %}border-red-500{% endif %}">
+                <span>{{ message }}</span>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+  
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="glass-card p-6 rounded-2xl border-l-4 border-pure-blue hover:shadow-xl transition-all">
+            <p class="text-gray-600 text-xs uppercase font-semibold">Groupes de Service</p>
+            <p class="text-4xl font-black text-pure-blue mt-2">{{ groupes|length }}</p>
+        </div>
+        <div class="glass-card p-6 rounded-2xl border-l-4 border-pure-green hover:shadow-xl transition-all">
+            <p class="text-gray-600 text-xs uppercase font-semibold">Membres Total</p>
+            <p class="text-4xl font-black text-pure-green-dark mt-2">{{ total_membres|default:"0" }}</p>
+        </div>
+        <div class="glass-card p-6 rounded-2xl border-l-4 border-purple-500 hover:shadow-xl transition-all">
+            <p class="text-gray-600 text-xs uppercase font-semibold">Groupes Actifs</p>
+            <p class="text-4xl font-black text-purple-600 mt-2">{{ groupes_actifs|default:"0" }}</p>
+        </div>
+    </div>
+
+    <div class="glass-card rounded-2xl overflow-hidden mb-8">
+        <div class="p-6 border-b-2 border-pure-blue/20 flex justify-between items-center">
+            <h3 class="font-bold text-xl text-pure-blue">Groupes de Service</h3>
+            <button onclick="document.getElementById('modalGroupe').classList.remove('hidden')" class="px-6 py-3 blue-gradient text-white rounded-xl font-bold text-sm hover:shadow-lg transition-all">
+                + Créer un groupe
+            </button>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead class="bg-blue-50 text-gray-700 uppercase text-xs font-semibold">
+                    <tr>
+                        <th class="p-4">Nom du Groupe</th>
+                        <th class="p-4">Couleur</th>
+                        <th class="p-4">Jour de Service</th>
+                        <th class="p-4">Membres</th>
+                        <th class="p-4">Statut</th>
+                        <th class="p-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {% for groupe in groupes %}
+                    <tr class="hover:bg-blue-50 transition-colors">
+                        <td class="p-4">
+                            <div class="flex items-center gap-3">
+                                <span class="w-4 h-4 rounded-full" style="background-color: {{ groupe.couleur }}"></span>
+                                <span class="font-semibold text-gray-800">{{ groupe.nom_groupe }}</span>
+                            </div>
+                        </td>
+                        <td class="p-4">
+                            <span class="w-8 h-8 rounded-full inline-block" style="background-color: {{ groupe.couleur }}"></span>
+                        </td>
+                        <td class="p-4 text-gray-600">{{ groupe.jour_service|default:"Non défini" }}</td>
+                        <td class="p-4">
+                            <span class="text-pure-blue font-bold">{{ groupe.membres.count }}</span> membres
+                        </td>
+                        <td class="p-4">
+                            {% if groupe.est_actif %}
+                            <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold">Actif</span>
+                            {% else %}
+                            <span class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-semibold">Inactif</span>
+                            {% endif %}
+                        </td>
+                        <td class="p-4">
+                            <button onclick="openEditModal({{ groupe.id }}, '{{ groupe.nom_groupe }}', '{{ groupe.couleur }}', '{{ groupe.jour_service }}')" class="text-pure-blue text-sm hover:underline mr-3 font-semibold">Modifier</button>
+                            <button onclick="openMembersModal({{ groupe.id }}, '{{ groupe.nom_groupe }}')" class="text-pure-green-dark text-sm hover:underline mr-3 font-semibold">Membres</button>
+                            <form method="POST" action="{% url 'supprimer_groupe' groupe.id %}" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce groupe ?');">
+                                {% csrf_token %}
+                                <button type="submit" class="text-red-600 text-sm hover:underline font-semibold">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="p-8 text-center text-gray-500">
+                            Aucun groupe de service. <button onclick="document.getElementById('modalGroupe').classList.remove('hidden')" class="text-pure-blue hover:underline font-semibold">Créer un groupe</button>
+                        </td>
+                    </tr>
+    <div class="glass-card rounded-2xl overflow-hidden mt-8">
+        <div class="p-6 border-b-2 border-pure-blue/20 flex justify-between items-center">
+            <h3 class="font-bold text-xl text-pure-blue">Planning des Services à Venir</h3>
+            {% if groupes %}
+            <button onclick="document.getElementById('modalPlanning').classList.remove('hidden')" class="px-6 py-3 green-gradient text-white rounded-xl font-bold text-sm hover:shadow-lg transition-all">
+                + Créer un planning
+            </button>
+            {% endif %}
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead class="bg-blue-50 text-gray-700 uppercase text-xs font-semibold">
+                    <tr>
+                        <th class="p-4">Date</th>
+                        <th class="p-4">Type de Service</th>
+                        <th class="p-4">Groupe</th>
+                        <th class="p-4">Tâches</th>
+                        <th class="p-4">Statut</th>
+                        <th class="p-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {% for planning in plannings %}
+                    <tr class="hover:bg-blue-50 transition-colors">
+                        <td class="p-4 text-gray-800">{{ planning.date_service }}</td>
+                        <td class="p-4 text-gray-800">{{ planning.type_service }}</td>
+                        <td class="p-4 text-pure-blue font-semibold">{{ planning.groupe.nom_groupe }}</td>
+                        <td class="p-4 text-gray-600">
+                            {% if planning.assignations %}
+                                <span class="text-xs">{{ planning.assignations|length }} tâche(s)</span>
+                            {% else %}
+                                <span class="text-gray-400 text-xs">Non défini</span>
+                            {% endif %}
+                        </td>
+                        <td class="p-4">
+                            <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold">À venir</span>
+                        </td>
+                        <td class="p-4">
+                            <button onclick="openTaskModal({{ planning.id }}, '{{ planning.type_service }}')" class="text-purple-600 text-sm hover:underline mr-2 font-semibold">Tâches</button>
+                            <button onclick="openSuiviModal({{ planning.id }})" class="text-pure-green-dark text-sm hover:underline mr-2 font-semibold">Suivi</button>
+                            <form method="POST" action="{% url 'supprimer_planning' planning.id %}" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce planning ?');">
+                                {% csrf_token %}
+                                <button type="submit" class="text-red-600 text-sm hover:underline font-semibold">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="p-8 text-center text-gray-500">
+                            {% if groupes %}
+                                Aucun planning défini. <button onclick="document.getElementById('modalPlanning').classList.remove('hidden')" class="text-pure-blue hover:underline font-semibold">Créer un planning</button>
+                            {% else %}
+                                Aucun planning défini. Créez d'abord des groupes de service.
+                            {% endif %}
+                        </td>
+                    </tr>
                     {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="modalPlanning" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div class="glass-card p-8 rounded-2xl max-w-md w-full mx-4 border-2 border-pure-green">
+        <h2 class="text-2xl font-bold text-pure-green-dark mb-6">Créer un Planning de Service</h2>
+        <form method="POST" action="{% url 'ajout_planning' %}">
+            {% csrf_token %}
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 text-sm font-semibold mb-2">Date du service</label>
+                    <input type="date" name="date_service" class="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-xl focus:border-pure-green focus:outline-none" required>
                     {% if groupe.membres.count > 4 %}
                     <div class="w-8 h-8 rounded-full border-2 border-white bg-gray-100 flex items-center justify-center text-xs font-bold text-gray-500">
                         +{{ groupe.membres.count|add:"-4" }}
                     </div>
                     {% endif %}
                 </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-semibold mb-2">Type de service</label>
+                    <select name="type_service" class="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-xl focus:border-pure-green focus:outline-none" required>
+                        <option value="">Sélectionner un type</option>
+                        <option value="1er Culte">1er Culte</option>
+                        <option value="2ème Culte">2ème Culte</option>
+                        <option value="Culte des Boss">Culte des Boss</option>
+                        <option value="Prière">Prière</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-semibold mb-2">Groupe assigné</label>
+                    <select name="groupe" class="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-xl focus:border-pure-green focus:outline-none" required>
+                        <option value="">Sélectionner un groupe</option>
+                        {% for groupe in groupes %}
+                        <option value="{{ groupe.id }}">{{ groupe.nom_groupe }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-semibold mb-2">Tâches à assigner (une par ligne)</label>
+                    <textarea name="taches" rows="4" class="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-xl focus:border-pure-green focus:outline-none" placeholder="Louange&#10;Accueil&#10;Sono&#10;Projection..."></textarea>
+                    <p class="text-xs text-gray-500 mt-1">Entrez chaque tâche sur une nouvelle ligne</p>
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-semibold mb-2">Notes (optionnel)</label>
+                    <textarea name="notes" class="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-xl focus:border-pure-green focus:outline-none" rows="3"></textarea>
+                </div>
             </div>
-            {% endfor %}
-            <div onclick="openModal('groupeModal')" class="border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center p-4 cursor-pointer hover:border-yellow-500 hover:text-yellow-500 transition-colors h-full min-h-[120px]">
-                <span class="text-2xl font-bold mb-1">+</span>
-                <span class="text-sm font-bold">Nouveau Groupe</span>
+            <div class="flex gap-4 mt-6">
+                <button type="button" onclick="document.getElementById('modalPlanning').classList.add('hidden')" class="flex-1 px-4 py-3 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold rounded-xl transition-colors">Annuler</button>
+                <button type="submit" class="flex-1 px-4 py-3 green-gradient text-white font-bold rounded-xl hover:shadow-lg transition-all">Créer</button>
             </div>
+        </form>
         </div>
     </div>
+</div>
 
+<div id="modalGroupe" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div class="glass-card p-8 rounded-2xl max-w-md w-full mx-4 border-2 border-pure-blue">
+        <h2 class="text-2xl font-bold text-pure-blue mb-6">Créer un Groupe de Service</h2>
+        <form method="POST" action="{% url 'ajout_groupe' %}">
+            {% csrf_token %}
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 text-sm font-semibold mb-2">Nom du groupe</label>
+                    <input type="text" name="nom_groupe" class="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-xl focus:border-pure-blue focus:outline-none" required>
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-semibold mb-2">Couleur</label>
+                    <input type="color" name="couleur" value="#0000FF" class="w-full h-12 bg-white border-2 border-gray-300 rounded-xl">
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-semibold mb-2">Jour de service</label>
+                    <select name="jour_service" class="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-xl focus:border-pure-blue focus:outline-none">
+                        <option value="">Sélectionner un jour</option>
+                        <option value="Dimanche">Dimanche</option>
+                        <option value="Samedi">Samedi</option>
+                        <option value="Mercredi">Mercredi</option>
+                        <option value="Vendredi">Vendredi</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-semibold mb-2">Description</label>
+                    <textarea name="description" class="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-xl focus:border-pure-blue focus:outline-none" rows="3"></textarea>
+                </div>
     <!-- Planning -->
     <div>
         <h2 class="text-xl font-bold text-gray-800 mb-4">Prochains Services</h2>
@@ -76,7 +275,30 @@
                     </tbody>
                 </table>
             </div>
+            <div class="flex gap-4 mt-6">
+                <button type="button" onclick="document.getElementById('modalGroupe').classList.add('hidden')" class="flex-1 px-4 py-3 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold rounded-xl transition-colors">Annuler</button>
+                <button type="submit" class="flex-1 px-4 py-3 blue-gradient text-white font-bold rounded-xl hover:shadow-lg transition-all">Créer</button>
+            </div>
+        </form>
         </div>
     </div>
 </div>
+
+<script>
+    function openEditModal(id, nom, couleur, jour) {
+        alert('Modification du groupe: ' + nom);
+    }
+    
+    function openMembersModal(id, nom) {
+        window.location.href = '/groupes/' + id + '/membres/';
+    }
+    
+    function openTaskModal(planningId, typeService) {
+        window.location.href = '/planning/' + planningId + '/taches/';
+    }
+    
+    function openSuiviModal(planningId) {
+        window.location.href = '/planning/' + planningId + '/suivi/';
+    }
+</script>
 {% endblock %}
