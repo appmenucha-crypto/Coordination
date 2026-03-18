@@ -2055,7 +2055,7 @@ def liste_notifications(request):
         is_admin = True
 
     if is_admin:
-        template_name = 'admin/notifications/liste.html'
+        template_name = 'admin/liste.html'
     else:
         template_name = 'notifications/liste.html'
         
