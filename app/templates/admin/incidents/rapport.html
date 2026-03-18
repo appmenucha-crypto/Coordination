@@ -1,17 +1,22 @@
-{% extends 'base.html' %}
+{% extends 'responsable/base_responsable.html' %}
 
 {% block title %}Signaler un Incident - {% endblock %}
 
 {% block content %}
 <div class="animate-fade-in">
-    <div class="flex flex-col md:flex-row justify-between items-end mb-6 gap-4">
-        <div>
-            <h2 class="text-3xl font-display font-bold text-red-500">SIGNALER UN INCIDENT</h2>
-            <p class="text-gray-500 uppercase tracking-widest text-xs">Rapport d'incident et discipline</p>
+    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-4">
+        <div class="flex items-center gap-4 w-full lg:w-auto">
+            <button onclick="toggleSidebar()" class="lg:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
+            <div>
+                <h2 class="text-3xl font-display font-bold text-red-500">SIGNALER UN INCIDENT</h2>
+                <p class="text-gray-500 uppercase tracking-widest text-xs">Rapport d'incident et discipline</p>
+            </div>
         </div>
-        <div class="flex gap-2">
-            <a href="{% url 'gestion' %}" class="px-4 py-2 border border-gray-600 text-gray-500 rounded-lg hover:bg-gray-800">
-                Retour à la gestion
+        <div class="flex gap-2 w-full lg:w-auto justify-end">
+            <a href="{% url 'gestion' %}" class="px-4 py-2 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 font-semibold">
+                Retour
             </a>
         </div>
     </div>
@@ -32,7 +37,7 @@
             <!-- Type d'incident -->
             <div>
                 <label class="block text-sm font-bold text-gray-500 mb-2">Type d'incident *</label>
-                <select name="type_incident" class="w-full p-3 rounded-lg custom-input" required>
+                <select name="type_incident" class="w-full p-3 rounded-lg bg-white border-2 border-gray-300 text-gray-800 text-sm focus:border-red-500 focus:outline-none" required>
                     <option value="">Sélectionner le type d'incident</option>
                     <option value="VERBAL">Avertissement verbal</option>
                     <option value="ECRIT">Avertissement écrit</option>
@@ -48,19 +53,19 @@
             <!-- Titre -->
             <div>
                 <label class="block text-sm font-bold text-gray-500 mb-2">Titre *</label>
-                <input type="text" name="titre" class="w-full p-3 rounded-lg custom-input" placeholder="Titre de l'incident" required>
+                <input type="text" name="titre" class="w-full p-3 rounded-lg bg-white border-2 border-gray-300 text-gray-800 text-sm focus:border-red-500 focus:outline-none" placeholder="Titre de l'incident" required>
             </div>
 
             <!-- Date de l'incident -->
             <div>
                 <label class="block text-sm font-bold text-gray-500 mb-2">Date de l'incident *</label>
-                <input type="date" name="date_incident" class="w-full p-3 rounded-lg custom-input" value="{{ today|date:'Y-m-d' }}" required>
+                <input type="date" name="date_incident" class="w-full p-3 rounded-lg bg-white border-2 border-gray-300 text-gray-800 text-sm focus:border-red-500 focus:outline-none" value="{{ today|date:'Y-m-d' }}" required>
             </div>
 
             <!-- Membre concerné -->
             <div>
                 <label class="block text-sm font-bold text-gray-500 mb-2">Membre concerné *</label>
-                <select name="membre_concerne" class="w-full p-3 rounded-lg custom-input" required>
+                <select name="membre_concerne" class="w-full p-3 rounded-lg bg-white border-2 border-gray-300 text-gray-800 text-sm focus:border-red-500 focus:outline-none" required>
                     <option value="">Sélectionner le membre</option>
                     {% for membre in membres %}
                     <option value="{{ membre.id }}">{{ membre.prenom }} {{ membre.nom }}</option>
@@ -71,7 +76,7 @@
             <!-- Déclaré par -->
             <div>
                 <label class="block text-sm font-bold text-gray-500 mb-2">Déclaré par</label>
-                <select name="declare_par" class="w-full p-3 rounded-lg custom-input">
+                <select name="declare_par" class="w-full p-3 rounded-lg bg-white border-2 border-gray-300 text-gray-800 text-sm focus:border-red-500 focus:outline-none">
                     <option value="">Sélectionner le déclarant (optionnel)</option>
                     {% for membre in membres %}
                     <option value="{{ membre.id }}">{{ membre.prenom }} {{ membre.nom }}</option>
@@ -82,7 +87,7 @@
             <!-- Description -->
             <div>
                 <label class="block text-sm font-bold text-gray-500 mb-2">Description détaillée *</label>
-                <textarea name="description" rows="6" class="w-full p-3 rounded-lg custom-input" placeholder="Décrivez les faits en détail..." required></textarea>
+                <textarea name="description" rows="6" class="w-full p-3 rounded-lg bg-white border-2 border-gray-300 text-gray-800 text-sm focus:border-red-500 focus:outline-none" placeholder="Décrivez les faits en détail..." required></textarea>
             </div>
 
             <!-- Info box -->
@@ -100,10 +105,10 @@
 
             <!-- Submit buttons -->
             <div class="flex justify-end gap-4 pt-4">
-                <a href="{% url 'gestion' %}" class="px-6 py-3 border border-gray-600 text-gray-500 rounded-lg hover:bg-gray-800 font-bold">
+                <a href="{% url 'gestion' %}" class="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 font-bold">
                     Annuler
                 </a>
-                <button type="submit" class="px-6 py-3 bg-[#B21E28] text-white rounded-lg hover:bg-[#8B1820] font-bold">
+                <button type="submit" class="px-6 py-3 red-gradient text-white rounded-lg hover:shadow-lg font-bold">
                     Signaler l'incident
                 </button>
             </div>
@@ -111,4 +116,3 @@
     </div>
 </div>
 {% endblock %}
-
