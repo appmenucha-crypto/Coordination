@@ -4,12 +4,17 @@
 
 {% block content %}
 <div class="animate-fade-in">
-    <header class="flex justify-between items-center mb-8">
-        <div>
-            <h1 class="text-4xl font-display font-bold text-depart-green mb-2">Tableau de <span class="text-depart-gold">Bord</span></h1>
-            <p class="text-gray-600">Bienvenue, <span class="text-gray-900 font-semibold">{{ user.username }}</span></p>
+    <header class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-4">
+        <div class="flex items-center gap-4 w-full lg:w-auto">
+            <button onclick="toggleSidebar()" class="lg:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
+            <div>
+                <h1 class="text-3xl lg:text-4xl font-display font-bold text-depart-green mb-2">Tableau de <span class="text-depart-gold">Bord</span></h1>
+                <p class="text-gray-600">Bienvenue, <span class="text-gray-900 font-semibold">{{ user.username }}</span></p>
+            </div>
         </div>
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-4 w-full lg:w-auto justify-end">
             <a href="{% url 'liste_notifications' %}" class="relative p-3 glass-card rounded-xl hover:border-depart-green transition-all">
                 <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
                 {% if notifications %}

@@ -47,11 +47,25 @@
         .gold-gradient {
             background: linear-gradient(135deg, #D2AF1F 0%, #B8961C 100%);
         }
+        @media (max-width: 1024px) {
+            aside {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease-in-out;
+                position: fixed;
+                z-index: 50;
+            }
+            aside.open {
+                transform: translateX(0);
+            }
+        }
     </style>
 </head>
 <body class="min-h-screen">
+    <!-- Overlay pour mobile -->
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden transition-opacity" onclick="toggleSidebar()"></div>
+
     <!-- Sidebar pour Responsable de Département -->
-    <aside class="fixed left-0 top-0 h-full w-64 bg-white border-r-4 border-depart-green z-40 shadow-2xl">
+    <aside class="fixed left-0 top-0 h-full w-64 bg-white border-r-4 border-depart-green z-40 shadow-2xl overflow-y-auto">
         <div class="p-6 border-b-2 border-depart-green/30">
             <!-- Logo -->
             <div class="mb-4">
@@ -109,8 +123,17 @@
         </nav>
     </aside>
 
-    <main class="ml-64 p-8">
+    <main class="lg:ml-64 p-4 lg:p-8 transition-all duration-300">
         {% block content %}{% endblock %}
     </main>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.querySelector('aside');
+            const overlay = document.getElementById('sidebarOverlay');
+            if (sidebar) sidebar.classList.toggle('open');
+            if (overlay) overlay.classList.toggle('hidden');
+        }
+    </script>
 </body>
 </html>
