@@ -2046,12 +2046,13 @@ def liste_notifications(request):
     
     # Déterminer quel template utiliser en fonction du rôle de l'utilisateur
     is_admin = False
-    try:
+    
+    # Vérification robuste sans try/except pour éviter les erreurs 500
+    if hasattr(request.user, 'profile'):
         if request.user.profile.role == UserProfile.Role.ADMIN:
             is_admin = True
-    except (UserProfile.DoesNotExist, AttributeError):
-        if request.user.is_superuser:
-            is_admin = True
+    elif request.user.is_superuser:
+        is_admin = True
 
     if is_admin:
         template_name = 'admin/notifications/liste.html'
