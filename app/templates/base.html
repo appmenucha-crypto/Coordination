@@ -90,8 +90,10 @@
     <aside class="fixed left-0 top-0 h-full w-64 bg-white border-r-4 border-depart-green z-40 animate-slide-in shadow-2xl">
         <div class="p-6 border-b-2 border-depart-green/30">
             <!-- Logo -->
-            <div class="mb-4">
-                <img src="/media/Logo-VH-A.G.E.png" alt="Logo VH A.G.E" class="w-32 h-auto mx-auto object-contain">
+            <div class="mb-4 flex justify-center">
+                <div class="w-24 h-24 rounded-full border-4 border-depart-green/20 overflow-hidden bg-white flex items-center justify-center shadow-md">
+                    <img src="/media/Logo-VH-A.G.E.png" alt="Logo VH A.G.E" class="w-20 h-20 object-contain">
+                </div>
             </div>
             <h2 class="font-display font-bold text-xl text-depart-green text-center">{{ nom_departement|default:"Département" }}</h2>
             <p class="text-gray-600 text-xs mt-1 text-center">Gestion du département</p>
